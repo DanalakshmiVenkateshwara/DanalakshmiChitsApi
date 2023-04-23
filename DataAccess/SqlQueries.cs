@@ -13,19 +13,28 @@ namespace DataAccess
 
         public const string GET_ADMIN_PROFILE = @"SELECT ADDRESS, LANDLINENO,MOBILENO FROM ADMINPROFILE";
 
+
+        public const string GET_APP_USERS = @"SELECT Name, Phone,State, Date FROM ApplicationUsers";
+        public const string Get_Users_By_Id = @"Select Name ,phone,Address from  UserRegistration where id = @userId";
+        public const string Get_All_Users = @"Select * from  UserRegistration";
+        public const string Get_EnrollMents_By_GroupId = @"Select * from Enrollments where groupId = @groupId";
+        public const string Get_All_EnrollMents = @"Select * from Enrollments";
+
         public const string GET_USER_PROFILE = @"Select * from USERPROFILE where Id = @UserId";
 
-        public const string Get_All_ChitPlans = @"Select * from ChitPlans";
+        public const string Get_All_ChitPlans = @"Select * from ChitGroups";
 
-        public const string Add_ChitPlan = @"Insert into Chit_Groups 
-                                            (GroupId,GroupName,Amount,Duration,InstallmentAmount,NoOfMembers,Existed,StartDate,MembersInCircle)
-                                           values(@GroupId,@GroupName,@Amount,@Duration,@InstallmentAmount,@NoOfMembers,@Existed,@StartDate,@MembersInCircle)";
+        public const string Add_ChitPlan = @"Insert into ChitGroups 
+                                            (GroupName,Amount,Duration,InstallmentAmount,NoOfMembers,Existed,StartDate,MembersInCircle)
+                                           values(@GroupName,@Amount,@Duration,@InstallmentAmount,@NoOfMembers,@Existed,@StartDate,@MembersInCircle)";
 
-        public const string EnrollMent = @"Insert into Enrollments(UserId,GroupId,enrolementDate, groupStatus)value (@UserId,@GroupId,@enrolementDate, @groupStatus)";
+        public const string Add_APP_USER = @"Insert into ApplicationUsers (Name,PHONE,State,Date)values(@Name,@PHONE,@State,@Date)";
 
-        public const string RegisteUsers = @"Insert into RegisteUsers
-                                             (Name,Phone,EMail,Password,Address,City,State)
-                                             values(Name,Phone,EMail,Password,Address,City,State)";
+        public const string EnrollMent = @"Insert into Enrollments (UserId,GroupId,enrollmentDate) values (@UserId,@GroupId,@enrollmentDate)";
+
+        public const string RegisteUsers = @"Insert into UserRegistration
+                                             (Name,Phone,EMail,Aadhar,Password,Address,City,State,Date)
+                                             values(@Name,@Phone,@EMail,@Aadhar,@Password,@Address,@City,@State,@Date)";
 
         public const string AuctionDetailsByGroup = @"Insert into GroupWiseDetails 
                                                      (UserId,GroupId,AuctionDate,AuctionAmount,AuctionToBePaid,NoOfMonthsCompleted,DueDate,Status)
@@ -34,6 +43,8 @@ namespace DataAccess
         public const string UserPayments = @"Insert into UserPayments 
                                           (UserId,GroupId,CurrentMonthEmi,Divident,TotalAmount,DueAmount,AuctionDate,PaymentDate,FullyPiad,PaymentMonth,Raised)
                                           values(@UserId,@GroupId,@CurrentMonthEmi,@Divident,@TotalAmount,@DueAmount,@AuctionDate,@PaymentDate,@FullyPiad,@PaymentMonth,@Raised)";
+        public const string Get_UserOutStandings_By_GroupId = @"Select * from userpayments where groupid=@groupid";
+        public const string Get_All_UserOutStandings = @"Select * from userpayments";
 
         public const string Add_Auction_Details = @"Insert into AuctionDetails (UserId,GroupId,AuctionAmount,AuctionDate,Dividend) values (@UserId,@GroupId,@AuctionAmount,@AuctionDate,@Dividend)";
     }

@@ -14,10 +14,10 @@ namespace DataAccess.Repositories
         public UserRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
-        public async Task<int> MemberRegistration(Register register)
-        {
-            return await this.AddOrUpdateDynamic(SqlQueries.Member_Registration, new { Name = register.Name, Phone = register.Phone, State = register.State});
-        }
+        //public async Task<int> MemberRegistration(Register register)
+        //{
+        //    return await this.AddOrUpdateDynamic(SqlQueries.Member_Registration, new { Name = register.Name, Phone = register.Phone, State = register.State});
+        //}
         public async Task<UserProfile> GetUserProfile(int userId)
         {
             return await this.Find<UserProfile>(SqlQueries.GET_USER_PROFILE, new { userId = userId });

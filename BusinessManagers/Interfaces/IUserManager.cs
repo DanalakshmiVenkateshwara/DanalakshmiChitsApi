@@ -9,7 +9,7 @@ namespace BusinessManagers.Interfaces
 {
     public interface IUserManager
     {
-        Task<int> MemberRegistration(Register register);
+        //Task<int> MemberRegistration(Register register);
         Task<UserProfile> GetUserProfile(int userId);
         Task<List<ChitPlans>> GetAllChitPlans();
     }

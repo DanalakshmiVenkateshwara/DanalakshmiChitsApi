@@ -26,6 +26,19 @@ namespace DanalakshmiChitsApi.Controllers
             return await _adminManger.GetAdminProfile();
         }
         [HttpPost]
+        [Route("AddAppUsers")]
+        public async Task<int> AddAppUsers(AppUsers appUsers)
+        {
+            return await _adminManger.AddAppUsers(appUsers);
+        }
+        //we need to get data based on date
+        [HttpGet]
+        [Route("GetAppUsers")]
+        public async Task<List<AppUsers>> GetAppUsers()
+        {
+            return await _adminManger.GetAppUsers();
+        }
+        [HttpPost]
         [Route("AddChitPlan")]
         public async Task<int> AddChitPlan(ChitPlans chitPlans)
         {
@@ -33,11 +46,16 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpPost]
         [Route("EnrollMent")]
-        public async Task<int> EnrollMent(int userId, int GroupId, string enrolementDate, bool groupStatus)
+        public async Task<int> EnrollMent(int userId, int GroupId)
         {
-            return await _adminManger.EnrollMent(userId, GroupId, enrolementDate, groupStatus);
+            return await _adminManger.EnrollMent(userId, GroupId, DateTime.Now);
         }
-
+        [HttpGet]
+        [Route("GetEnrollMents")]
+        public async Task<List<EnrollMents>> GetEnrollMents(int groupId)
+        {
+            return await _adminManger.GetEnrollMents(groupId);
+        }
         [HttpPost]
         [Route("UserRegistration")]
         public async Task<int> UserRegistration(RegisteUsers registeUsers)
@@ -45,6 +63,13 @@ namespace DanalakshmiChitsApi.Controllers
             return await _adminManger.UserRegistration(registeUsers);
         }
 
+        [HttpGet]
+        [Route("GetUsers")]
+        public async Task<List<RegisteUsers>> GetUsers(int userId)
+        {
+            return await _adminManger.GetUsers(userId);
+        }
+        
         [HttpPost]
         [Route("AuctionDetailsByGroup")]
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)
@@ -56,6 +81,12 @@ namespace DanalakshmiChitsApi.Controllers
         public async Task<int> UserPayments(UserPayments userPayments)
         {
             return await _adminManger.UserPayments(userPayments);
+        }
+        [HttpGet]
+        [Route("UserOutStandings")]
+        public async Task<List<UserPayments>> UserOutStandings(int groupId)
+        {
+            return await _adminManger.UserOutStandings(groupId);
         }
 
         [HttpPost]

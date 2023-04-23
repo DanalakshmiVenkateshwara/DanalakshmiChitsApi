@@ -9,7 +9,7 @@ namespace DataAccess.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<int> MemberRegistration(Register register);
+        //Task<int> MemberRegistration(Register register);
         Task<UserProfile> GetUserProfile(int userId);
         Task<List<ChitPlans>> GetAllChitPlans();
     }

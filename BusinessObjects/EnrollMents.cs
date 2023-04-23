@@ -10,7 +10,7 @@ namespace BusinessObjects
     {
         public int UserId { get; set; }
         public int GroupId { get; set; }
-        public String EnrollMentDate { get; set; }
-        public bool GroupStatus { get; set; }
+        public DateTime EnrollMentDate { get; set; }
+        public bool IsActive { get; set; }
     }
 }

@@ -19,12 +19,12 @@ namespace DanalakshmiChitsApi.Controllers
             _userManager = userManager;
             _adminManger = adminManger;
         }
-        [HttpPost]
-        [Route("MemberRegistration")]
-        public async Task<int> MemberRegistration(Register register)
-        {
-            return await _userManager.MemberRegistration(register);
-        }
+        //[HttpPost]
+        //[Route("MemberRegistration")]
+        //public async Task<int> MemberRegistration(Register register)
+        //{
+        //    return await _userManager.MemberRegistration(register);
+        //}
         [HttpGet]
         [Route("GetUserprofile")]
         public async Task<UserProfile> GetUserProfile(int userId)
@@ -37,5 +37,6 @@ namespace DanalakshmiChitsApi.Controllers
         {
             return await _userManager.GetAllChitPlans();
         }
+        
     }
 }

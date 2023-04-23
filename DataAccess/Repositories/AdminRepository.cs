@@ -17,13 +17,41 @@ namespace DataAccess.Repositories
         {
             return await this.Find<AdminProfile>(SqlQueries.GET_ADMIN_PROFILE);
         }
+        public async Task<List<AppUsers>> GetAppUsers()
+        {
+
+            return await this.All<AppUsers>(SqlQueries.GET_APP_USERS);
+        }
+        public async Task<List<RegisteUsers>> GetUsers(int userId)
+        {
+            if(userId > 0)
+                return await this.All<RegisteUsers>(SqlQueries.Get_Users_By_Id, new { userId });
+            else
+            return await this.All<RegisteUsers>(SqlQueries.Get_All_Users);
+        }
+        public async Task<List<EnrollMents>> GetEnrollMents(int groupId)
+        {
+            if (groupId > 0)
+                return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_GroupId, new { groupId });
+            else
+                return await this.All<EnrollMents>(SqlQueries.Get_All_EnrollMents);
+        }
+        public async Task<int> AddAppUsers(AppUsers appUsers)
+        {
+            return await this.AddOrUpdateDynamic(SqlQueries.Add_APP_USER, new
+            {
+                Name = appUsers.Name,
+                Phone = appUsers.Phone,
+                State = appUsers.State,
+                Date = DateTime.Now,
+            });
+        }
         public async Task<int> AddChitPlan(ChitPlans chitPlans)
         {
             return await this.AddOrUpdateDynamic(SqlQueries.Add_ChitPlan, new
             {
-                chitPlans.GroupId,
                 chitPlans.GroupName,
-                chitPlans.ChitAmount,
+                chitPlans.Amount,
                 chitPlans.Duration,
                 chitPlans.InstallmentAmount,
                 chitPlans.NoOfMembers,
@@ -32,14 +60,13 @@ namespace DataAccess.Repositories
                 chitPlans.MembersInCircle
             });
         }
-        public async Task<int> EnrollMent(int userId, int groupId, string enrolementDate, bool groupStatus)
+        public async Task<int> EnrollMent(int userId, int groupId, DateTime enrollmentDate)
         {
             return await this.AddOrUpdateDynamic(SqlQueries.EnrollMent, new
             {
                 userId,
                 groupId,
-                enrolementDate,
-                groupStatus,
+                enrollmentDate
             });
         }
         public async Task<int> UserRegistration(RegisteUsers registeUsers)
@@ -52,7 +79,9 @@ namespace DataAccess.Repositories
                 registeUsers.Password,
                 registeUsers.Address,
                 registeUsers.City,
-                registeUsers.State
+                registeUsers.State,
+                registeUsers.Aadhar,
+                registeUsers.Date
             });
         }
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)
@@ -85,6 +114,14 @@ namespace DataAccess.Repositories
                 userPayments.PaymentMonth,
                 userPayments.Raised
             });
+        }
+        //we need to chnage the query and table 
+        public async Task<List<UserPayments>> UserOutStandings(int groupId)
+        {
+            if (groupId > 0)
+                return await this.All<UserPayments>(SqlQueries.Get_UserOutStandings_By_GroupId, new { groupId });
+            else
+                return await this.All<UserPayments>(SqlQueries.Get_All_UserOutStandings);
         }
         public async Task<int> AddAuctionDetails(AuctionDetails auctionDetails)
         {

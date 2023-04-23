@@ -18,10 +18,10 @@ namespace DataAccess.Repositories.Managers
         {
             _userRepository = userRepository;
         }
-        public async Task<int> MemberRegistration(Register register)
-        {
-            return await _userRepository.MemberRegistration(register);
-        }
+        //public async Task<int> MemberRegistration(Register register)
+        //{
+        //    return await _userRepository.MemberRegistration(register);
+        //}
         public async Task<UserProfile> GetUserProfile(int userId)
         {
             return await _userRepository.GetUserProfile(userId);
