@@ -45,9 +45,9 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.GetUsers(userId);
         }
-        public async Task<List<EnrollMents>> GetEnrollMents(int groupId)
+        public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId)
         {
-            return await _adminRepository.GetEnrollMents(groupId);
+            return await _adminRepository.GetEnrollMents(userId,groupId);
         }
         
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)

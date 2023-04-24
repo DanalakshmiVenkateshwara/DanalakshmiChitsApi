@@ -27,5 +27,10 @@ namespace DataAccess.Repositories
         {
             return await this.All<ChitPlans>(SqlQueries.Get_All_ChitPlans);
         }
+        public async Task<List<UserPayments>> GetUserAcCopy(int userId, int groupId)
+        {
+            return await this.All<UserPayments>(SqlQueries.Get_User_Ac_Copy, new { groupId, userId});
+        }
+           
     }
 }

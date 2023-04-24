@@ -15,7 +15,7 @@ namespace BusinessObjects
         public int TotalAmount { get; set; }
         public int DueAmount { get; set; }
         public string AuctionDate { get; set; }
-        public bool FullyPiad { get; set; }
+        public bool FullyPaid { get; set; }
         public string PaymentDate { get; set; }
         public string PaymentMonth { get; set; }
         public string Raised { get; set; }

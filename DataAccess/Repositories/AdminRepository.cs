@@ -29,9 +29,11 @@ namespace DataAccess.Repositories
             else
             return await this.All<RegisteUsers>(SqlQueries.Get_All_Users);
         }
-        public async Task<List<EnrollMents>> GetEnrollMents(int groupId)
+        public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId)
         {
-            if (groupId > 0)
+            if (userId > 0 && groupId > 0) //it is used for my chits in user
+                return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_UserId_GroupId, new { groupId, userId });
+            else if (groupId > 0)
                 return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_GroupId, new { groupId });
             else
                 return await this.All<EnrollMents>(SqlQueries.Get_All_EnrollMents);
@@ -110,7 +112,7 @@ namespace DataAccess.Repositories
                 userPayments.DueAmount,
                 userPayments.AuctionDate,
                 userPayments.PaymentDate,
-                userPayments.FullyPiad,
+                userPayments.FullyPaid,
                 userPayments.PaymentMonth,
                 userPayments.Raised
             });

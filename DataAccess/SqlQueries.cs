@@ -17,6 +17,12 @@ namespace DataAccess
         public const string GET_APP_USERS = @"SELECT Name, Phone,State, Date FROM ApplicationUsers";
         public const string Get_Users_By_Id = @"Select Name ,phone,Address from  UserRegistration where id = @userId";
         public const string Get_All_Users = @"Select * from  UserRegistration";
+        public const string Get_EnrollMents_By_UserId_GroupId = @"select Date [NextAuctionDate], '4/20'[PaidUpto] ,  C.groupName,C.amount from Enrollments E
+                                                           inner join ChitGroups C on c.Id= e.GroupId
+                                                           inner join UserRegistration u on u.id =e.UserId
+                                                           where c.ID = @groupId and u.Id = @UserId";
+
+        public const string Get_User_Ac_Copy = @"select paymentDate, Totalamount, dueamount, paymentMonth from UserPayments where groupId = @groupId and userId = @userId";
         public const string Get_EnrollMents_By_GroupId = @"Select * from Enrollments where groupId = @groupId";
         public const string Get_All_EnrollMents = @"Select * from Enrollments";
 
@@ -41,8 +47,8 @@ namespace DataAccess
                                                      values(@UserId,@GroupId,@AuctionDate,@AuctionAmount,@AuctionToBePaid,@NoOfMonthsCompleted,@DueDate,Status)";
 
         public const string UserPayments = @"Insert into UserPayments 
-                                          (UserId,GroupId,CurrentMonthEmi,Divident,TotalAmount,DueAmount,AuctionDate,PaymentDate,FullyPiad,PaymentMonth,Raised)
-                                          values(@UserId,@GroupId,@CurrentMonthEmi,@Divident,@TotalAmount,@DueAmount,@AuctionDate,@PaymentDate,@FullyPiad,@PaymentMonth,@Raised)";
+                                          (UserId,GroupId,CurrentMonthEmi,Divident,TotalAmount,DueAmount,AuctionDate,PaymentDate,FullyPaid,PaymentMonth,Raised)
+                                          values(@UserId,@GroupId,@CurrentMonthEmi,@Divident,@TotalAmount,@DueAmount,@AuctionDate,@PaymentDate,@FullyPaid,@PaymentMonth,@Raised)";
         public const string Get_UserOutStandings_By_GroupId = @"Select * from userpayments where groupid=@groupid";
         public const string Get_All_UserOutStandings = @"Select * from userpayments";
 

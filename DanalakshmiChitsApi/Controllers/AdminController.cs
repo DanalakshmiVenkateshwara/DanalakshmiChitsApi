@@ -52,9 +52,9 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("GetEnrollMents")]
-        public async Task<List<EnrollMents>> GetEnrollMents(int groupId)
+        public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId)
         {
-            return await _adminManger.GetEnrollMents(groupId);
+            return await _adminManger.GetEnrollMents(userId,groupId);
         }
         [HttpPost]
         [Route("UserRegistration")]
