@@ -16,5 +16,6 @@ namespace BusinessObjects
         public int Amount { get; set; }
         public DateTime EnrollMentDate { get; set; }
         public bool IsActive { get; set; }
+        public string UserName { get; set; }
     }
 }

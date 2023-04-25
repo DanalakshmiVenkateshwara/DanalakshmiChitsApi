@@ -21,10 +21,16 @@ namespace DataAccess
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId
                                                            where c.ID = @groupId and u.Id = @UserId";
+        public const string Get_EnrollMents_By_GroupId = @"select u.name[UserName], E.EnrollmentDate, C.groupName,C.amount from Enrollments E
+                                                           inner join ChitGroups C on c.Id= e.GroupId
+                                                           inner join UserRegistration u on u.id =e.UserId
+                                                           where c.ID = @groupId";
+        public const string Get_All_EnrollMents = @" select u.name[UserName], E.EnrollmentDate, C.groupName,C.amount from Enrollments E
+                                                           inner join ChitGroups C on c.Id= e.GroupId
+                                                           inner join UserRegistration u on u.id =e.UserId";
 
         public const string Get_User_Ac_Copy = @"select paymentDate, Totalamount, dueamount, paymentMonth from UserPayments where groupId = @groupId and userId = @userId";
-        public const string Get_EnrollMents_By_GroupId = @"Select * from Enrollments where groupId = @groupId";
-        public const string Get_All_EnrollMents = @"Select * from Enrollments";
+        
 
         public const string GET_USER_PROFILE = @"Select * from USERPROFILE where Id = @UserId";
 

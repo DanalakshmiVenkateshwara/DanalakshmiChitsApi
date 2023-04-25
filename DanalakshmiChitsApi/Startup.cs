@@ -33,26 +33,36 @@ namespace DanalakshmiChitsApi
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "PracticeSol", Version = "v1" });
             });
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+            services.AddCors(o => o.AddPolicy("DanalakshmiChitsCors", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseRouting();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
                 //app.UseSwagger();
                 //app.UseSwaggerUI();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PracticeSol v1"));
             }
+            else
+                app.UseCors("DanalakshmiChitsCors");
 
             app.UseHttpsRedirection();
 
             DbProviderFactories.RegisterFactory("System.Data.SqlClient", SqlClientFactory.Instance);
 
-            app.UseRouting();
-
+            //app.UseRouting();
+            //app.UseCors("DanalakshmiChitsCors");
             //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
