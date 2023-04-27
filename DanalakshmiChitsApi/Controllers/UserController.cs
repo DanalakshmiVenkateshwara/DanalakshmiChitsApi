@@ -35,9 +35,9 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("GetAllChitPlans")]
-        public async Task<List<ChitPlans>> GetAllChitPlans()
+        public async Task<List<ChitPlans>> GetAllChitPlans([FromRoute] bool groupStatus)
         {
-            return await _userManager.GetAllChitPlans();
+            return await _userManager.GetAllChitPlans(groupStatus);
         }
         [HttpGet]
         [Route("GetUserAcCopy")]

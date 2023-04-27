@@ -36,6 +36,9 @@ namespace DataAccess
         public const string GET_USER_PROFILE = @"Select * from USERPROFILE where Id = @UserId";
 
         public const string Get_All_ChitPlans = @"Select * from ChitGroups";
+
+        public const string Get_All_ChitPlans_By_Group = @"Select * from ChitGroups where groupStatus = @groupStatus";
+
         public const string Add_ChitPlan = @"Insert into ChitGroups 
                                             (GroupName,Amount,Duration,InstallmentAmount,NoOfMembers,Existed,StartDate,MembersInCircle)
                                            values(@GroupName,@Amount,@Duration,@InstallmentAmount,@NoOfMembers,@Existed,@StartDate,@MembersInCircle)";
