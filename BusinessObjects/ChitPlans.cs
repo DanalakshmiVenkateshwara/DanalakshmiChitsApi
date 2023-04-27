@@ -17,6 +17,6 @@ namespace BusinessObjects
         public bool Existed { get; set; }
         public DateTime StartDate { get; set; }
         public int MembersInCircle { get; set; }
-        public bool GroupStatus { get; set; }
+        public bool GroupClosed { get; set; }
     }
 }

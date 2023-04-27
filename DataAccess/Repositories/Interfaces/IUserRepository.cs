@@ -11,7 +11,7 @@ namespace DataAccess.Repositories.Interfaces
     {
         //Task<int> MemberRegistration(Register register);
         Task<UserProfile> GetUserProfile(int userId);
-        Task<List<ChitPlans>> GetAllChitPlans(bool groupStatus);
+        Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed);
         Task<List<UserPayments>> GetUserAcCopy(int userId, int groupId);
     }
 }

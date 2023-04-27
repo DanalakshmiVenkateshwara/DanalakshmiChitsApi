@@ -37,14 +37,15 @@ namespace DataAccess
 
         public const string Get_All_ChitPlans = @"Select * from ChitGroups";
 
-        public const string Get_All_ChitPlans_By_Group = @"Select * from ChitGroups where groupStatus = @groupStatus";
+        public const string Get_All_ChitPlans_By_Group = @"Select * from ChitGroups where groupClosed = @groupClosed";
 
         public const string Add_ChitPlan = @"Insert into ChitGroups 
                                             (GroupName,Amount,Duration,InstallmentAmount,NoOfMembers,Existed,StartDate,MembersInCircle)
                                            values(@GroupName,@Amount,@Duration,@InstallmentAmount,@NoOfMembers,@Existed,@StartDate,@MembersInCircle)";
 
         public const string Update_ChitPlan = @"update ChitGroups set Existed = @Existed, StartDate = @StartDate where Id = @GroupID";
-        
+        public const string Closed_ChitPlan = @"update ChitGroups set GroupClosed = @GroupClosed, StartDate = @StartDate where Id = @GroupID";
+
 
         public const string Add_APP_USER = @"Insert into ApplicationUsers (Name,PHONE,State,Date)values(@Name,@PHONE,@State,@Date)";
 

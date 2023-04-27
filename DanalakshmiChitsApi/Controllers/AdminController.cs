@@ -48,9 +48,9 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpPost]
         [Route("EnrollMent")]
-        public async Task<int> EnrollMent(int userId, int GroupId)
+        public async Task<int> EnrollMent(int userId, int groupId)
         {
-            return await _adminManger.EnrollMent(userId, GroupId, DateTime.Now);
+            return await _adminManger.EnrollMent(userId, groupId, DateTime.Now);
         }
         [HttpGet]
         [Route("GetEnrollMents")]

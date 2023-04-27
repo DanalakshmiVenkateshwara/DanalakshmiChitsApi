@@ -15,7 +15,7 @@ namespace BusinessManagers.Interfaces
         Task<List<AppUsers>> GetAppUsers();
         Task<int> AddAppUsers(AppUsers appUsers);
         Task<int> AddChitPlan(ChitPlans chitPlans);
-        Task<int> EnrollMent(int userId, int GroupId, DateTime enrollmentDate);
+        Task<int> EnrollMent(int userId, int groupId, DateTime enrollmentDate);
         Task<int> UserRegistration(RegisteUsers registeUsers);
         Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails);
         Task<int> UserPayments(UserPayments userPayments);

@@ -32,9 +32,9 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.AddChitPlan(chitPlans);
         }
-        public async Task<int> EnrollMent(int userId, int GroupId, DateTime enrollmentDate)
+        public async Task<int> EnrollMent(int userId, int groupId, DateTime enrollmentDate)
         {
-            return await _adminRepository.EnrollMent(userId, GroupId, enrollmentDate);
+            return await _adminRepository.EnrollMent(userId, groupId, enrollmentDate);
         }
         public async Task<int> UserRegistration(RegisteUsers registeUsers)
         {

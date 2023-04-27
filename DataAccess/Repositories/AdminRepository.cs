@@ -52,6 +52,8 @@ namespace DataAccess.Repositories
         {
             if (!chitPlans.Existed)
                 return await this.AddOrUpdateDynamic(SqlQueries.Update_ChitPlan, new {GroupId = chitPlans.Id, Existed = true , StartDate = DateTime.Now});
+            else if (!chitPlans.GroupClosed && chitPlans.Existed)
+                return await this.AddOrUpdateDynamic(SqlQueries.Closed_ChitPlan, new { GroupId = chitPlans.Id, GroupClosed = true, StartDate = DateTime.Now });
             else { 
             return await this.AddOrUpdateDynamic(SqlQueries.Add_ChitPlan, new
             {
