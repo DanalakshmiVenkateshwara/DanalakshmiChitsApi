@@ -8,6 +8,7 @@ namespace BusinessObjects
 {
      public class ChitPlans
      {
+        public int Id { get; set; }
         public string GroupName { get; set; }
         public int Amount { get; set; }
         public int Duration { get; set; }

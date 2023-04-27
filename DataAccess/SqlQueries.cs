@@ -17,6 +17,7 @@ namespace DataAccess
         public const string GET_APP_USERS = @"SELECT Name, Phone,State, Date FROM ApplicationUsers";
         public const string Get_Users_By_Id = @"Select Name ,phone,Address from  UserRegistration where id = @userId";
         public const string Get_All_Users = @"Select * from  UserRegistration";
+        public const string EnrollMent = @"Insert into Enrollments (UserId,GroupId,enrollmentDate) values (@UserId,@GroupId,@enrollmentDate)";
         public const string Get_EnrollMents_By_UserId_GroupId = @"select Date [NextAuctionDate], '4/20'[PaidUpto] ,  C.groupName,C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId
@@ -25,7 +26,7 @@ namespace DataAccess
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId
                                                            where c.ID = @groupId";
-        public const string Get_All_EnrollMents = @" select u.name[UserName], E.EnrollmentDate, C.groupName,C.amount from Enrollments E
+        public const string Get_All_EnrollMents = @"select u.name[UserName], E.EnrollmentDate, C.groupName,C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId";
 
@@ -35,14 +36,16 @@ namespace DataAccess
         public const string GET_USER_PROFILE = @"Select * from USERPROFILE where Id = @UserId";
 
         public const string Get_All_ChitPlans = @"Select * from ChitGroups";
-
         public const string Add_ChitPlan = @"Insert into ChitGroups 
                                             (GroupName,Amount,Duration,InstallmentAmount,NoOfMembers,Existed,StartDate,MembersInCircle)
                                            values(@GroupName,@Amount,@Duration,@InstallmentAmount,@NoOfMembers,@Existed,@StartDate,@MembersInCircle)";
 
+        public const string Update_ChitPlan = @"update ChitGroups set Existed = @Existed, StartDate = @StartDate where Id = @GroupID";
+        
+
         public const string Add_APP_USER = @"Insert into ApplicationUsers (Name,PHONE,State,Date)values(@Name,@PHONE,@State,@Date)";
 
-        public const string EnrollMent = @"Insert into Enrollments (UserId,GroupId,enrollmentDate) values (@UserId,@GroupId,@enrollmentDate)";
+        
 
         public const string RegisteUsers = @"Insert into UserRegistration
                                              (Name,Phone,EMail,Aadhar,Password,Address,City,State,Date)

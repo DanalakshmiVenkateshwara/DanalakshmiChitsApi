@@ -50,17 +50,21 @@ namespace DataAccess.Repositories
         }
         public async Task<int> AddChitPlan(ChitPlans chitPlans)
         {
+            if (!chitPlans.Existed)
+                return await this.AddOrUpdateDynamic(SqlQueries.Update_ChitPlan, new {GroupId = chitPlans.Id, Existed = true , StartDate = DateTime.Now});
+            else { 
             return await this.AddOrUpdateDynamic(SqlQueries.Add_ChitPlan, new
             {
-                chitPlans.GroupName,
-                chitPlans.Amount,
-                chitPlans.Duration,
-                chitPlans.InstallmentAmount,
-                chitPlans.NoOfMembers,
-                chitPlans.Existed,
-                chitPlans.StartDate,
-                chitPlans.MembersInCircle
+                GroupName= chitPlans.GroupName,
+                Amount = chitPlans.Amount,
+                Duration =chitPlans.Duration,
+                InstallmentAmount =chitPlans.InstallmentAmount,
+                NoOfMembers = chitPlans.NoOfMembers,
+                Existed = false,
+                StartDate = chitPlans.StartDate,
+                MembersInCircle = chitPlans.MembersInCircle
             });
+            }
         }
         public async Task<int> EnrollMent(int userId, int groupId, DateTime enrollmentDate)
         {
