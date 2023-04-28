@@ -47,7 +47,7 @@ namespace DanalakshmiChitsApi.Controllers
             return await _adminManger.AddChitPlan(chitPlans);
         }
         [HttpPost]
-        [Route("EnrollMent")]
+        [Route("EnrollMent/{userId}/{groupId}")]
         public async Task<int> EnrollMent(int userId, int groupId)
         {
             return await _adminManger.EnrollMent(userId, groupId, DateTime.Now);
