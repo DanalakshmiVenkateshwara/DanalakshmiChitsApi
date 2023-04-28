@@ -24,6 +24,10 @@ namespace DataAccess
                                              (Name,Phone,EMail,Aadhar,Password,Address,City,State,Date)
                                              values(@Name,@Phone,@EMail,@Aadhar,@Password,@Address,@City,@State,@Date)";
 
+
+        //we need to change edit scope is for email and phone only
+        public const string UpdateUsers_ById = @"Update UserRegistration set Name= @Name,Phone=@Phone,EMail=@EMail,Aadhar=@Aadhar,Password=@Password,Address=@Address,City=@City,State=@State where Id= @Id";
+
         //public const string Get_Users_By_Id = @"Select Name ,phone,Address from  UserRegistration where id = @userId";
 
         public const string Get_Users_By_Id = @"Select * from UserRegistration where id = @userId";

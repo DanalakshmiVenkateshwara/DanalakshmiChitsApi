@@ -79,6 +79,23 @@ namespace DataAccess.Repositories
         }
         public async Task<int> UserRegistration(RegisteUsers registeUsers)
         {
+            if (registeUsers.Id > 0)
+            {
+                return await this.AddOrUpdateDynamic(SqlQueries.UpdateUsers_ById, new
+                {
+                    registeUsers.Id,
+                    registeUsers.Name,
+                    registeUsers.Phone,
+                    registeUsers.EMail,
+                    registeUsers.Password,
+                    registeUsers.Address,
+                    registeUsers.City,
+                    registeUsers.State,
+                    registeUsers.Aadhar,
+                    Date = DateTime.Now
+                });
+            }
+            else { 
             return await this.AddOrUpdateDynamic(SqlQueries.RegisteUsers, new
             {
                 registeUsers.Name,
@@ -91,6 +108,7 @@ namespace DataAccess.Repositories
                 registeUsers.Aadhar,
                 Date = DateTime.Now
             });
+            }
         }
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)
         {
