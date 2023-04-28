@@ -89,7 +89,7 @@ namespace DataAccess.Repositories
                 registeUsers.City,
                 registeUsers.State,
                 registeUsers.Aadhar,
-                DateTime.Now
+                Date = DateTime.Now
             });
         }
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)

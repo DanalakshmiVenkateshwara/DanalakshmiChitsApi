@@ -24,9 +24,12 @@ namespace DataAccess
                                              (Name,Phone,EMail,Aadhar,Password,Address,City,State,Date)
                                              values(@Name,@Phone,@EMail,@Aadhar,@Password,@Address,@City,@State,@Date)";
 
-        public const string Get_Users_By_Id = @"Select Name ,phone,Address from  UserRegistration where id = @userId";
+        //public const string Get_Users_By_Id = @"Select Name ,phone,Address from  UserRegistration where id = @userId";
 
-        public const string Get_All_Users = @"Select Name,Phone,Email,Password, CONCAT(Address,', ', City, ', ',state)[Address] from  UserRegistration";
+        public const string Get_Users_By_Id = @"Select * from UserRegistration where id = @userId";
+
+        //public const string Get_All_Users = @"Select Name,Phone,Email,Password, CONCAT(Address,', ', City, ', ',state)[Address] from  UserRegistration";
+        public const string Get_All_Users = @"Select * from  UserRegistration";
 
         public const string GET_USER_PROFILE = @"Select * from USERPROFILE where Id = @UserId";
 
