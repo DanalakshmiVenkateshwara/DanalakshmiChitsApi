@@ -63,7 +63,7 @@ namespace DataAccess.Repositories
                 InstallmentAmount =chitPlans.InstallmentAmount,
                 NoOfMembers = chitPlans.NoOfMembers,
                 Existed = false,
-                StartDate = chitPlans.StartDate,
+                StartDate = DateTime.Now,
                 MembersInCircle = chitPlans.MembersInCircle
             });
             }
@@ -89,7 +89,7 @@ namespace DataAccess.Repositories
                 registeUsers.City,
                 registeUsers.State,
                 registeUsers.Aadhar,
-                registeUsers.Date
+                DateTime.Now
             });
         }
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)
