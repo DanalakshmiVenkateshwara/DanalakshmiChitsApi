@@ -18,5 +18,6 @@ namespace BusinessObjects
         public DateTime StartDate { get; set; }
         public int MembersInCircle { get; set; }
         public bool GroupClosed { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

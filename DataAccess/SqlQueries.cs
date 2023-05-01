@@ -65,7 +65,7 @@ namespace DataAccess
 
         public const string Update_ChitPlan = @"update ChitGroups set Existed = @Existed, StartDate = @StartDate where Id = @GroupID";
 
-        public const string Closed_ChitPlan = @"update ChitGroups set GroupClosed = @GroupClosed, StartDate = @StartDate where Id = @GroupID";
+        public const string Closed_ChitPlan = @"update ChitGroups set GroupClosed = @GroupClosed, EndDate = @EndDate where Id = @GroupID";
 
         public const string AuctionDetailsByGroup = @"Insert into GroupWiseDetails 
                                                      (UserId,GroupId,AuctionDate,AuctionAmount,AuctionToBePaid,NoOfMonthsCompleted,DueDate,Status)
