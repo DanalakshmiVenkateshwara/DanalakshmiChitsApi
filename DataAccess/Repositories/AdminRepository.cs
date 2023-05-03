@@ -22,12 +22,12 @@ namespace DataAccess.Repositories
 
             return await this.All<AppUsers>(SqlQueries.GET_APP_USERS);
         }
-        public async Task<List<RegisteUsers>> GetUsers(int userId)
+        public async Task<List<RegisteUsers>> GetUsers(int userId, bool IsActive)
         {
             if(userId > 0)
                 return await this.All<RegisteUsers>(SqlQueries.Get_Users_By_Id, new { userId });
             else
-            return await this.All<RegisteUsers>(SqlQueries.Get_All_Users);
+            return await this.All<RegisteUsers>(SqlQueries.Get_All_Users, new { isActive=  IsActive });
         }
         public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId)
         {
@@ -37,6 +37,10 @@ namespace DataAccess.Repositories
                 return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_GroupId, new { groupId });
             else
                 return await this.All<EnrollMents>(SqlQueries.Get_All_EnrollMents);
+        }
+        public async Task<List<UserPayments>>  GetAuctionDetails(int groupId)
+        {
+            return await this.All<UserPayments>(SqlQueries.Get_AuctionDetails_By_GroupId, new { groupId });
         }
         public async Task<int> AddAppUsers(AppUsers appUsers)
         {
@@ -50,10 +54,10 @@ namespace DataAccess.Repositories
         }
         public async Task<int> AddChitPlan(ChitPlans chitPlans)
         {
-            if (!chitPlans.Existed)
+            if (!chitPlans.Existed && !chitPlans.IsDelete)
                 return await this.AddOrUpdateDynamic(SqlQueries.Update_ChitPlan, new {GroupId = chitPlans.Id, Existed = true , StartDate = DateTime.Now});
-            else if (!chitPlans.GroupClosed && chitPlans.Existed)
-                return await this.AddOrUpdateDynamic(SqlQueries.Closed_ChitPlan, new { GroupId = chitPlans.Id, GroupClosed = true, EndDate = DateTime.Now });
+            else if (!chitPlans.GroupClosed && chitPlans.Existed || chitPlans.IsDelete)
+                return await this.AddOrUpdateDynamic(SqlQueries.Closed_ChitPlan, new { GroupId = chitPlans.Id, IsDelete = chitPlans.IsDelete, GroupClosed = true, EndDate = DateTime.Now });
             else { 
             return await this.AddOrUpdateDynamic(SqlQueries.Add_ChitPlan, new
             {
@@ -79,7 +83,9 @@ namespace DataAccess.Repositories
         }
         public async Task<int> UserRegistration(RegisteUsers registeUsers)
         {
-            if (registeUsers.Id > 0)
+            if (!registeUsers.IsActive)
+                return await this.AddOrUpdateDynamic(SqlQueries.DeleteUsers_ById, new { userId =registeUsers.Id });
+            else if (registeUsers.Id > 0)
             {
                 return await this.AddOrUpdateDynamic(SqlQueries.UpdateUsers_ById, new
                 {
@@ -95,19 +101,19 @@ namespace DataAccess.Repositories
                     Date = DateTime.Now
                 });
             }
-            else { 
-            return await this.AddOrUpdateDynamic(SqlQueries.RegisteUsers, new
-            {
-                registeUsers.Name,
-                registeUsers.Phone,
-                registeUsers.EMail,
-                registeUsers.Password,
-                registeUsers.Address,
-                registeUsers.City,
-                registeUsers.State,
-                registeUsers.Aadhar,
-                Date = DateTime.Now
-            });
+            else {
+                return await this.AddOrUpdateDynamic(SqlQueries.RegisteUsers, new
+                {
+                    registeUsers.Name,
+                    registeUsers.Phone,
+                    registeUsers.EMail,
+                    registeUsers.Password,
+                    registeUsers.Address,
+                    registeUsers.City,
+                    registeUsers.State,
+                    registeUsers.Aadhar,
+                    Date = DateTime.Now
+                });
             }
         }
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)
@@ -128,17 +134,21 @@ namespace DataAccess.Repositories
         {
             return await this.AddOrUpdateDynamic(SqlQueries.UserPayments, new
             {
-                userPayments.UserId,
-                userPayments.GroupId,
-                userPayments.CurrentMonthEmi,
-                userPayments.Divident,
-                userPayments.TotalAmount,
-                userPayments.DueAmount,
-                userPayments.AuctionDate,
-                userPayments.PaymentDate,
-                userPayments.FullyPaid,
-                userPayments.PaymentMonth,
-                userPayments.Raised
+                
+                UserId = userPayments.UserId,
+                GroupId = userPayments.GroupId,
+                CurrentMonthEmi =userPayments.CurrentMonthEmi,
+                Dividend =userPayments.Dividend,
+                TotalAmount =userPayments.TotalAmount,
+                DueAmount = userPayments.DueAmount,
+                //userPayments.DueAmount,
+                //AuctionDate =userPayments.AuctionDate,
+                AuctionDate = DateTime.Now,
+                PaymentDate = DateTime.Now,
+                //userPayments.PaymentDate,
+                FullyPaid =userPayments.FullyPaid,
+                PaymentMonth =userPayments.PaymentMonth,
+                Raised =userPayments.Raised
             });
         }
         //we need to chnage the query and table 

@@ -8,16 +8,21 @@ namespace BusinessObjects
 {
     public class UserPayments
     {
+        public int Id { get; set; }
         public int UserId { get; set; }
         public int GroupId { get; set; }
         public int CurrentMonthEmi { get; set; }
-        public int Divident { get; set; }
+        public string UserName { get; set; }
+        public string GroupName { get; set; }
+        public DateTime NextAuctionDate { get; set; }
+        public int PaidUpto { get; set; }
+        public int Dividend { get; set; }
         public int TotalAmount { get; set; }
         public int DueAmount { get; set; }
-        public string AuctionDate { get; set; }
+        public DateTime AuctionDate { get; set; }
         public bool FullyPaid { get; set; }
-        public string PaymentDate { get; set; }
-        public string PaymentMonth { get; set; }
-        public string Raised { get; set; }
+        public DateTime PaymentDate { get; set; }
+        public int PaymentMonth { get; set; }
+        public bool Raised { get; set; }
     }
 }

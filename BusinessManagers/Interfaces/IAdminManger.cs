@@ -10,8 +10,9 @@ namespace BusinessManagers.Interfaces
     public interface IAdminManger
     {
         Task<AdminProfile> GetAdminProfile();
-        Task<List<RegisteUsers>> GetUsers(int userId);
+        Task<List<RegisteUsers>> GetUsers(int userId, bool isActive);
         Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId);
+        Task<List<UserPayments>> GetAuctionDetails(int groupId);
         Task<List<AppUsers>> GetAppUsers();
         Task<int> AddAppUsers(AppUsers appUsers);
         Task<int> AddChitPlan(ChitPlans chitPlans);

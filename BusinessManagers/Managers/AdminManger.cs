@@ -41,15 +41,20 @@ namespace BusinessManagers.Managers
             return await _adminRepository.UserRegistration(registeUsers);
         }
 
-        public async Task<List<RegisteUsers>> GetUsers(int userId)
+        public async Task<List<RegisteUsers>> GetUsers(int userId, bool isActive)
         {
-            return await _adminRepository.GetUsers(userId);
+            return await _adminRepository.GetUsers(userId, isActive);
         }
         public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId)
         {
             return await _adminRepository.GetEnrollMents(userId,groupId);
         }
+        public async Task<List<UserPayments>> GetAuctionDetails(int groupId)
+        {
+            return await _adminRepository.GetAuctionDetails(groupId);
+        }
         
+
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)
         {
             return await _adminRepository.AuctionDetailsByGroup(groupWiseDetails);

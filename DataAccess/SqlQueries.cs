@@ -28,12 +28,14 @@ namespace DataAccess
         //we need to change edit scope is for email and phone only
         public const string UpdateUsers_ById = @"Update UserRegistration set Name= @Name,Phone=@Phone,EMail=@EMail,Aadhar=@Aadhar,Password=@Password,Address=@Address,City=@City,State=@State where Id= @Id";
 
+
+        public const string DeleteUsers_ById = @"Update UserRegistration set IsActive = 0 where id = @userId";
         //public const string Get_Users_By_Id = @"Select Name ,phone,Address from  UserRegistration where id = @userId";
 
         public const string Get_Users_By_Id = @"Select * from UserRegistration where id = @userId";
 
         //public const string Get_All_Users = @"Select Name,Phone,Email,Password, CONCAT(Address,', ', City, ', ',state)[Address] from  UserRegistration";
-        public const string Get_All_Users = @"Select * from  UserRegistration";
+        public const string Get_All_Users = @"Select * from  UserRegistration where IsActive =@isActive";
 
         public const string GET_USER_PROFILE = @"Select * from USERPROFILE where Id = @UserId";
 
@@ -51,10 +53,15 @@ namespace DataAccess
                                                            inner join UserRegistration u on u.id =e.UserId
                                                            where c.ID = @groupId";
 
-        public const string Get_All_EnrollMents = @"select u.name[UserName], E.EnrollmentDate, C.groupName,C.amount from Enrollments E
+        public const string Get_All_EnrollMents = @"select u.Id[UserId],u.name[UserName], E.EnrollmentDate, C.groupName, C.Id[GroupId],C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId";
 
+        public const string Get_AuctionDetails_By_GroupId = @"select u.Id[UserId],c.InstallmentAmount[TotalAmount],u.name[UserName],G.NoOfMonthsCompleted[PaidUpTo],
+                                                              G.dividend/c.NoOfMembers[Dividend],C.groupName, C.Id[GroupId],C.amount from Enrollments E
+                                                           inner join ChitGroups C on c.Id= e.GroupId
+                                                           inner join UserRegistration u on u.id =e.UserId
+														   inner join GroupWiseDetails G on G.groupId =e.GroupId where e.GroupId = @GroupId";
         public const string Get_All_ChitPlans = @"Select * from ChitGroups";
 
         public const string Get_All_ChitPlans_By_Group = @"Select * from ChitGroups where groupClosed = @groupClosed";
@@ -65,19 +72,28 @@ namespace DataAccess
 
         public const string Update_ChitPlan = @"update ChitGroups set Existed = @Existed, StartDate = @StartDate where Id = @GroupID";
 
-        public const string Closed_ChitPlan = @"update ChitGroups set GroupClosed = @GroupClosed, EndDate = @EndDate where Id = @GroupID";
+        public const string Closed_ChitPlan = @"update ChitGroups set GroupClosed = @GroupClosed, IsDelete = @IsDelete, EndDate = @EndDate where Id = @GroupID";
 
         public const string AuctionDetailsByGroup = @"Insert into GroupWiseDetails 
                                                      (UserId,GroupId,AuctionDate,AuctionAmount,AuctionToBePaid,NoOfMonthsCompleted,DueDate,Status)
                                                      values(@UserId,@GroupId,@AuctionDate,@AuctionAmount,@AuctionToBePaid,@NoOfMonthsCompleted,@DueDate,Status)";
 
         public const string UserPayments = @"Insert into UserPayments 
-                                          (UserId,GroupId,CurrentMonthEmi,Divident,TotalAmount,DueAmount,AuctionDate,PaymentDate,FullyPaid,PaymentMonth,Raised)
-                                          values(@UserId,@GroupId,@CurrentMonthEmi,@Divident,@TotalAmount,@DueAmount,@AuctionDate,@PaymentDate,@FullyPaid,@PaymentMonth,@Raised)";
+                                          (UserId,GroupId,CurrentMonthEmi,Dividend,TotalAmount,DueAmount,AuctionDate,PaymentDate,FullyPaid,PaymentMonth,Raised)
+                                          values(@UserId,@GroupId,@CurrentMonthEmi,@Dividend,@TotalAmount,@DueAmount,@AuctionDate,@PaymentDate,@FullyPaid,@PaymentMonth,@Raised)";
         
-        public const string Get_UserOutStandings_By_GroupId = @"Select * from userpayments where groupid=@groupid";
+        public const string Get_UserOutStandings_By_GroupId = @"select UR.Name[Username],C.GroupName,u.UserId,u.GroupId,u.CurrentMonthEmi,u.Dividend,u.TotalAmount,u.DueAmount,u.AuctionDAte,u.PaymentDate,u.PaymentMonth,U.Raised from UserPayments u
+                                                                  inner join chitGroups c on c.id=u.groupId
+                                                                  inner join userRegistration UR on UR.id=u.userId where groupid=@groupid";
 
-        public const string Get_All_UserOutStandings = @"Select * from userpayments";
+        public const string Get_All_UserOutStandings = @"select UR.Name[Username],C.GroupName,u.UserId,u.GroupId,u.CurrentMonthEmi,u.Dividend,u.TotalAmount,u.DueAmount,u.AuctionDAte,u.PaymentDate,u.PaymentMonth,U.Raised from UserPayments u
+                                                          inner join chitGroups c on c.id=u.groupId
+                                                          inner join userRegistration UR on UR.id=u.userId";
+
+
+            //--select UR.Name[Username],C.GroupName,  * from UserPayments u
+            //                                              --inner join chitGroups c on c.id=u.groupId
+            //                                             -- inner join userRegistration UR on UR.id=u.userId";
 
         public const string Add_Auction_Details = @"Insert into AuctionDetails (UserId,GroupId,AuctionAmount,AuctionDate,Dividend) values (@UserId,@GroupId,@AuctionAmount,@AuctionDate,@Dividend)";
     }

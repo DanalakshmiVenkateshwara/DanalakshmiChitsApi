@@ -58,6 +58,14 @@ namespace DanalakshmiChitsApi.Controllers
         {
             return await _adminManger.GetEnrollMents(userId,groupId);
         }
+        [HttpGet]
+        [Route("GetAuctionDetails/{groupId}")]
+        public async Task<List<UserPayments>> GetAuctionDetails(int groupId)
+        {
+            return await _adminManger.GetAuctionDetails(groupId);
+        }
+
+
         [HttpPost]
         [Route("UserRegistration")]
         public async Task<int> UserRegistration(RegisteUsers registeUsers)
@@ -66,10 +74,10 @@ namespace DanalakshmiChitsApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetUsers")]
-        public async Task<List<RegisteUsers>> GetUsers(int userId)
+        [Route("GetUsers/{groupId}/{isActive}")]
+        public async Task<List<RegisteUsers>> GetUsers(int userId,bool isActive)
         {
-            return await _adminManger.GetUsers(userId);
+            return await _adminManger.GetUsers(userId, isActive);
         }
         
         [HttpPost]
