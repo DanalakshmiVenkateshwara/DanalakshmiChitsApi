@@ -29,18 +29,23 @@ namespace DataAccess.Repositories
             else
             return await this.All<RegisteUsers>(SqlQueries.Get_All_Users, new { isActive=  IsActive });
         }
-        public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId)
+        public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId, bool isActive)
         {
-            if (userId > 0 && groupId > 0) //it is used for my chits in user
-                return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_UserId_GroupId, new { groupId, userId });
+            if (userId > 0 ) //it is used for my chits in user
+                return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_UserId, new {userId });
             else if (groupId > 0)
                 return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_GroupId, new { groupId });
             else
-                return await this.All<EnrollMents>(SqlQueries.Get_All_EnrollMents);
+                return await this.All<EnrollMents>(SqlQueries.Get_All_EnrollMents, new { isActive });
         }
         public async Task<List<UserPayments>>  GetAuctionDetails(int groupId)
         {
-            return await this.All<UserPayments>(SqlQueries.Get_AuctionDetails_By_GroupId, new { groupId });
+            if (groupId > 0) { 
+                return await this.All<UserPayments>(SqlQueries.Get_AuctionDetails_By_GroupId, new { groupId });
+            }
+            else
+                return await this.All<UserPayments>(SqlQueries.Get_AuctionDetails);
+
         }
         public async Task<int> AddAppUsers(AppUsers appUsers)
         {
@@ -72,8 +77,15 @@ namespace DataAccess.Repositories
             });
             }
         }
-        public async Task<int> EnrollMent(int userId, int groupId, DateTime enrollmentDate)
+        public async Task<int> EnrollMent(int userId, int groupId, DateTime enrollmentDate, bool isActive)
         {
+            if(!isActive)
+                return await this.AddOrUpdateDynamic(SqlQueries.Delete_EnrollMent, new
+                {
+                    groupId = groupId,
+                    userId = userId,
+                    isActive = isActive
+                });
             return await this.AddOrUpdateDynamic(SqlQueries.EnrollMent, new
             {
                 userId,

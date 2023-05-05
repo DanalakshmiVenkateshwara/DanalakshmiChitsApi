@@ -24,5 +24,6 @@ namespace BusinessObjects
         public DateTime PaymentDate { get; set; }
         public int PaymentMonth { get; set; }
         public bool Raised { get; set; }
+        public int Amount { get; set; }
     }
 }

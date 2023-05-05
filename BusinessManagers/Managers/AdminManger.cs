@@ -32,9 +32,9 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.AddChitPlan(chitPlans);
         }
-        public async Task<int> EnrollMent(int userId, int groupId, DateTime enrollmentDate)
+        public async Task<int> EnrollMent(int userId, int groupId, DateTime enrollmentDate, bool isActive)
         {
-            return await _adminRepository.EnrollMent(userId, groupId, enrollmentDate);
+            return await _adminRepository.EnrollMent(userId, groupId, enrollmentDate, isActive);
         }
         public async Task<int> UserRegistration(RegisteUsers registeUsers)
         {
@@ -45,9 +45,9 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.GetUsers(userId, isActive);
         }
-        public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId)
+        public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId, bool isActive)
         {
-            return await _adminRepository.GetEnrollMents(userId,groupId);
+            return await _adminRepository.GetEnrollMents(userId,groupId, isActive);
         }
         public async Task<List<UserPayments>> GetAuctionDetails(int groupId)
         {

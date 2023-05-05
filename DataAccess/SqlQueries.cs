@@ -41,27 +41,41 @@ namespace DataAccess
 
         public const string Get_User_Ac_Copy = @"select paymentDate, Totalamount, dueamount, paymentMonth from UserPayments where groupId = @groupId and userId = @userId";
 
+        public const string Delete_EnrollMent = @"Update Enrollments set isActive = @isActive , closeDate = GetDate() where userId = @userId and groupId = @groupId";
+
         public const string EnrollMent = @"Insert into Enrollments (UserId,GroupId,enrollmentDate) values (@UserId,@GroupId,@enrollmentDate)";
 
-        public const string Get_EnrollMents_By_UserId_GroupId = @"select Date [NextAuctionDate], '4/20'[PaidUpto] ,  C.groupName,C.amount from Enrollments E
+        public const string Get_EnrollMents_By_UserId = @"select Date [NextAuctionDate], g.status, '4/20'[PaidUpto] ,C.Duration,  C.groupName,C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId
-                                                           where c.ID = @groupId and u.Id = @UserId";
+														   inner join GroupWiseDetails g on g.userId = u.Id
+                                                           where u.Id = @UserId";
 
         public const string Get_EnrollMents_By_GroupId = @"select u.name[UserName], E.EnrollmentDate, C.groupName,C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId
                                                            where c.ID = @groupId";
 
-        public const string Get_All_EnrollMents = @"select u.Id[UserId],u.name[UserName], E.EnrollmentDate, C.groupName, C.Id[GroupId],C.amount from Enrollments E
+        public const string Get_All_EnrollMents = @"select u.Id[UserId],u.name[UserName],E.IsActive, E.EnrollmentDate,E.CloseDate, C.groupName, C.Id[GroupId],C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
-                                                           inner join UserRegistration u on u.id =e.UserId";
+                                                           inner join UserRegistration u on u.id =e.UserId where E.isActive = @isActive";
 
-        public const string Get_AuctionDetails_By_GroupId = @"select u.Id[UserId],c.InstallmentAmount[TotalAmount],u.name[UserName],G.NoOfMonthsCompleted[PaidUpTo],
-                                                              G.dividend/c.NoOfMembers[Dividend],C.groupName, C.Id[GroupId],C.amount from Enrollments E
-                                                           inner join ChitGroups C on c.Id= e.GroupId
-                                                           inner join UserRegistration u on u.id =e.UserId
-														   inner join GroupWiseDetails G on G.groupId =e.GroupId where e.GroupId = @GroupId";
+
+        public const string Get_AuctionDetails_By_GroupId = @" select top 1   u.Id[UserId],c.InstallmentAmount[TotalAmount],u.name[UserName],G.NoOfMonthsCompleted[PaidUpTo],
+                                                              G.dividend/c.NoOfMembers[Dividend],C.groupName, C.Id[GroupId],C.amount from GroupWiseDetails G 
+															  inner join ChitGroups C on c.Id= g.GroupId
+                                                           inner join UserRegistration u on u.id =G.UserId where g.groupId =4 order by g.id desc";
+
+        public const string Get_AuctionDetails = @"select u.Id[UserId], c.InstallmentAmount[TotalAmount], u.name[UserName], G.NoOfMonthsCompleted[PaidUpTo],
+                                                            G.dividend/c.NoOfMembers[Dividend], C.groupName, C.Id[GroupId], C.amount from GroupWiseDetails G
+                                                            inner join ChitGroups C on c.Id= g.GroupId
+                                                             inner join UserRegistration u on u.id = G.UserId"
+;
+        //public const string Get_AuctionDetails_By_GroupId = @"select u.Id[UserId],c.InstallmentAmount[TotalAmount],u.name[UserName],G.NoOfMonthsCompleted[PaidUpTo],
+        //                                                      G.dividend/c.NoOfMembers[Dividend],C.groupName, C.Id[GroupId],C.amount from Enrollments E
+        //                                                   inner join ChitGroups C on c.Id= e.GroupId
+        //                                                   inner join UserRegistration u on u.id =e.UserId
+        //						   inner join GroupWiseDetails G on G.groupId =e.GroupId where e.GroupId = @GroupId";
         public const string Get_All_ChitPlans = @"Select * from ChitGroups";
 
         public const string Get_All_ChitPlans_By_Group = @"Select * from ChitGroups where groupClosed = @groupClosed";

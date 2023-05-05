@@ -47,16 +47,16 @@ namespace DanalakshmiChitsApi.Controllers
             return await _adminManger.AddChitPlan(chitPlans);
         }
         [HttpPost]
-        [Route("EnrollMent/{userId}/{groupId}")]
-        public async Task<int> EnrollMent(int userId, int groupId)
+        [Route("EnrollMent/{userId}/{groupId}/{isActive}")]
+        public async Task<int> EnrollMent(int userId, int groupId, bool isActive)
         {
-            return await _adminManger.EnrollMent(userId, groupId, DateTime.Now);
+            return await _adminManger.EnrollMent(userId, groupId, DateTime.Now, isActive);
         }
         [HttpGet]
-        [Route("GetEnrollMents")]
-        public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId)
+        [Route("GetEnrollMents/{userId}/{groupId}/{isActive}")]
+        public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId, bool isActive)
         {
-            return await _adminManger.GetEnrollMents(userId,groupId);
+            return await _adminManger.GetEnrollMents(userId,groupId, isActive);
         }
         [HttpGet]
         [Route("GetAuctionDetails/{groupId}")]
