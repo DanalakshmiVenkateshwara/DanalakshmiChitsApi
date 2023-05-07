@@ -41,6 +41,10 @@ namespace DataAccess
 
         public const string Get_User_Ac_Copy = @"select paymentDate, Totalamount, dueamount, paymentMonth from UserPayments where groupId = @groupId and userId = @userId";
 
+        public const string Get_User_Pending_Payments = @"Select * from GroupWiseDetails 
+                                                          Where GroupId = @groupId AND NoOfMonthsCompleted not in 
+                                                          (Select PaymentMonth From UserPayments Where GroupId = @groupId AND USerID = @userId)";
+
         public const string Delete_EnrollMent = @"Update Enrollments set isActive = @isActive , closeDate = GetDate() where userId = @userId and groupId = @groupId";
 
         public const string EnrollMent = @"Insert into Enrollments (UserId,GroupId,enrollmentDate) values (@UserId,@GroupId,@enrollmentDate)";

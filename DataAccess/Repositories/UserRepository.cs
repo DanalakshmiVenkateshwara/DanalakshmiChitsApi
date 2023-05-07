@@ -32,7 +32,13 @@ namespace DataAccess.Repositories
         }
         public async Task<List<UserPayments>> GetUserAcCopy(int userId, int groupId)
         {
-            return await this.All<UserPayments>(SqlQueries.Get_User_Ac_Copy, new { groupId, userId});
+            List<UserPayments> pendingpayments = await this.All<UserPayments>(SqlQueries.Get_User_Pending_Payments, new { groupId, userId });
+            List<UserPayments> compltedpayments = await this.All<UserPayments>(SqlQueries.Get_User_Ac_Copy, new { groupId, userId });
+
+
+            //pendingpayments = (List<UserPayments>)pendingpayments.Concat(compltedpayments);
+
+            return pendingpayments;
         }
            
     }
