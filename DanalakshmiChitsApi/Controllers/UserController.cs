@@ -35,9 +35,9 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("GetAllChitPlans/{groupClosed}")]
-        public async Task<List<ChitPlans>> GetAllChitPlans([FromRoute] bool groupClosed)
+        public async Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed, int userId = 0)
         {
-            return await _userManager.GetAllChitPlans(groupClosed);
+            return await _userManager.GetAllChitPlans(groupClosed, userId);
         }
         [HttpGet]
         [Route("GetUserAcCopy")]

@@ -11,7 +11,7 @@ namespace BusinessManagers.Interfaces
     {
         //Task<int> MemberRegistration(Register register);
         Task<UserProfile> GetUserProfile(int userId);
-        Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed);
+        Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed, int userId);
         Task<List<UserPayments>> GetUserAcCopy(int userId, int groupId);
     }
 }

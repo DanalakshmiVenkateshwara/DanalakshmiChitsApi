@@ -74,7 +74,7 @@ namespace DanalakshmiChitsApi.Controllers
         }
 
         [HttpGet]
-        [Route("GetUsers/{groupId}/{isActive}")]
+        [Route("GetUsers/{userId}/{isActive}")]
         public async Task<List<RegisteUsers>> GetUsers(int userId,bool isActive)
         {
             return await _adminManger.GetUsers(userId, isActive);

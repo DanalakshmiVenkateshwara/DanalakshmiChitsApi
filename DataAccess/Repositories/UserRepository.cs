@@ -23,9 +23,11 @@ namespace DataAccess.Repositories
             return await this.Find<UserProfile>(SqlQueries.GET_USER_PROFILE, new { userId = userId });
           
         }
-        public async Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed)
+        public async Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed, int userId)
         {
-            //if(groupClosed)
+            if(userId>0)
+                return await this.All<ChitPlans>(SqlQueries.Get_Upcoming_ChitPlans);
+            else
                 return await this.All<ChitPlans>(SqlQueries.Get_All_ChitPlans_By_Group, new { groupClosed = groupClosed });
             //else
             //return await this.All<ChitPlans>(SqlQueries.Get_All_ChitPlans);
@@ -34,11 +36,8 @@ namespace DataAccess.Repositories
         {
             List<UserPayments> pendingpayments = await this.All<UserPayments>(SqlQueries.Get_User_Pending_Payments, new { groupId, userId });
             List<UserPayments> compltedpayments = await this.All<UserPayments>(SqlQueries.Get_User_Ac_Copy, new { groupId, userId });
-
-
-            //pendingpayments = (List<UserPayments>)pendingpayments.Concat(compltedpayments);
-
-            return pendingpayments;
+            var totalpayments = pendingpayments.Union(compltedpayments).ToList();
+            return totalpayments;
         }
            
     }

@@ -26,9 +26,9 @@ namespace DataAccess.Repositories.Managers
         {
             return await _userRepository.GetUserProfile(userId);
         }
-        public async Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed)
+        public async Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed, int userId)
         {
-            return await _userRepository.GetAllChitPlans(groupClosed);
+            return await _userRepository.GetAllChitPlans(groupClosed, userId);
         }
         public async Task<List<UserPayments>> GetUserAcCopy(int userId, int groupId)
         {

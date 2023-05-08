@@ -39,9 +39,9 @@ namespace DataAccess
 
         public const string GET_USER_PROFILE = @"Select * from USERPROFILE where Id = @UserId";
 
-        public const string Get_User_Ac_Copy = @"select paymentDate, Totalamount, dueamount, paymentMonth from UserPayments where groupId = @groupId and userId = @userId";
+        public const string Get_User_Ac_Copy = @"select groupId,UserId, paymentDate, Totalamount, dueamount, paymentMonth from UserPayments where groupId = @groupId and userId = @userId";
 
-        public const string Get_User_Pending_Payments = @"Select * from GroupWiseDetails 
+        public const string Get_User_Pending_Payments = @"Select groupId,UserId,InstallMentAmount[DueAmount], NoOfMonthsCompleted[PaymentMonth] from GroupWiseDetails 
                                                           Where GroupId = @groupId AND NoOfMonthsCompleted not in 
                                                           (Select PaymentMonth From UserPayments Where GroupId = @groupId AND USerID = @userId)";
 
@@ -83,6 +83,7 @@ namespace DataAccess
         public const string Get_All_ChitPlans = @"Select * from ChitGroups";
 
         public const string Get_All_ChitPlans_By_Group = @"Select * from ChitGroups where groupClosed = @groupClosed";
+        public const string Get_Upcoming_ChitPlans = @"select * from ChitGroups where existed = 0 and groupclosed =0 and isDelete =0";
 
         public const string Add_ChitPlan = @"Insert into ChitGroups 
                                             (GroupName,Amount,Duration,InstallmentAmount,NoOfMembers,Existed,StartDate,MembersInCircle)
