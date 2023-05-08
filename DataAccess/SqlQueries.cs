@@ -49,7 +49,7 @@ namespace DataAccess
 
         public const string EnrollMent = @"Insert into Enrollments (UserId,GroupId,enrollmentDate) values (@UserId,@GroupId,@enrollmentDate)";
 
-        public const string Get_EnrollMents_By_UserId = @"select Date [NextAuctionDate], g.status, '4/20'[PaidUpto] ,C.Duration,  C.groupName,C.amount from Enrollments E
+        public const string Get_EnrollMents_By_UserId = @"select Date [NextAuctionDate], g.status[UserChitSatus], g.NoOfMonthsCompleted[PaidUpto],c.Duration[TotalInstallMents] ,C.Duration,  C.groupName,C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId
 														   inner join GroupWiseDetails g on g.userId = u.Id

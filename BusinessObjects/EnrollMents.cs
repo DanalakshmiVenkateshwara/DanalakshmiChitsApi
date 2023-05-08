@@ -14,6 +14,8 @@ namespace BusinessObjects
         public string GroupName { get; set; }
         public DateTime NextAuctionDate { get; set; }
         public string PaidUpto { get; set; }
+        public string TotalInstallMents { get; set; }
+        public bool UserChitSatus { get; set; }
         public int Amount { get; set; }
         public DateTime EnrollMentDate { get; set; }
         public bool IsActive { get; set; }
