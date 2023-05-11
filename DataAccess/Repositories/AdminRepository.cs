@@ -31,10 +31,12 @@ namespace DataAccess.Repositories
         }
         public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId, bool isActive)
         {
-            if (userId > 0 ) //it is used for my chits in user
-                return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_UserId, new {userId });
+            if (userId > 0) //it is used for my chits in user
+                return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_UserId, new { userId });
             else if (groupId > 0)
                 return await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_GroupId, new { groupId });
+            else if (groupId == -1)
+                return new List<EnrollMents>();
             else
                 return await this.All<EnrollMents>(SqlQueries.Get_All_EnrollMents, new { isActive });
         }

@@ -32,10 +32,10 @@ namespace DataAccess.Repositories
             //else
             //return await this.All<ChitPlans>(SqlQueries.Get_All_ChitPlans);
         }
-        public async Task<List<UserPayments>> GetUserAcCopy(int userId, int groupId)
+        public async Task<List<AcDetails>> GetUserAcCopy(int userId, int groupId)
         {
-            List<UserPayments> pendingpayments = await this.All<UserPayments>(SqlQueries.Get_User_Pending_Payments, new { groupId, userId });
-            List<UserPayments> compltedpayments = await this.All<UserPayments>(SqlQueries.Get_User_Ac_Copy, new { groupId, userId });
+            List<AcDetails> pendingpayments = await this.All<AcDetails>(SqlQueries.Get_User_Pending_Payments, new { groupId, userId });
+            List<AcDetails> compltedpayments = await this.All<AcDetails>(SqlQueries.Get_User_Ac_Copy, new { groupId, userId });
             var totalpayments = pendingpayments.Union(compltedpayments).ToList();
             return totalpayments;
         }
