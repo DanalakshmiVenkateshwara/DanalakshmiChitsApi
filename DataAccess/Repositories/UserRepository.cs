@@ -23,6 +23,11 @@ namespace DataAccess.Repositories
             return await this.Find<UserProfile>(SqlQueries.GET_USER_PROFILE, new { userId = userId });
           
         }
+        public async Task<List<ChitPlans>> GetChitsDropDown()
+        {
+            return await this.All<ChitPlans>(SqlQueries.Get_Chits_DropDown);
+        }
+        
         public async Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed, int userId)
         {
             if(userId>0)

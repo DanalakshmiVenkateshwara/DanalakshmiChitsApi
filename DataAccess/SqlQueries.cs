@@ -53,7 +53,7 @@ namespace DataAccess
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId
 														   inner join GroupWiseDetails g on g.userId = u.Id
-                                                           where u.Id = @UserId";
+                                                           where e.userID = @UserId and e.IsActive = 1";
 
         public const string Get_EnrollMents_By_GroupId = @"select u.name[UserName], E.EnrollmentDate, C.groupName,C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
@@ -84,6 +84,7 @@ namespace DataAccess
 
         public const string Get_All_ChitPlans_By_Group = @"Select * from ChitGroups where groupClosed = @groupClosed";
         public const string Get_Upcoming_ChitPlans = @"select * from ChitGroups where existed = 0 and groupclosed =0 and isDelete =0";
+        public const string Get_Chits_DropDown = @"select id, groupName from ChitGroups where existed = 1 and  groupclosed = 0 and  isDelete =0 ";
 
         public const string Add_ChitPlan = @"Insert into ChitGroups 
                                             (GroupName,Amount,Duration,InstallmentAmount,NoOfMembers,Existed,StartDate,MembersInCircle)
