@@ -55,7 +55,7 @@ namespace DataAccess
 														   inner join GroupWiseDetails g on g.userId = u.Id
                                                            where e.userID = @UserId and e.IsActive = 1";
 
-        public const string Get_EnrollMents_By_GroupId = @"select u.name[UserName], E.EnrollmentDate, C.groupName,C.amount from Enrollments E
+        public const string Get_EnrollMents_By_GroupId = @"select u.Id[UserId],u.name[UserName],E.IsActive, E.EnrollmentDate,E.CloseDate, C.groupName,C.Id[GroupId],C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId
                                                            where c.ID = @groupId";
