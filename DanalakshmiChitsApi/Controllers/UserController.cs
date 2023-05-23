@@ -40,6 +40,12 @@ namespace DanalakshmiChitsApi.Controllers
             return await _userManager.GetAllChitPlans(groupClosed, userId);
         }
         [HttpGet]
+        [Route("GetChitsDropDown")]
+        public async Task<List<ChitPlans>> GetChitsDropDown()
+        {
+            return await _userManager.GetChitsDropDown();
+        }
+        [HttpGet]
         [Route("GetUserAcCopy")]
         public async Task<List<AcDetails>> GetUserAcCopy(int userId, int groupId)
         {

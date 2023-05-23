@@ -13,5 +13,6 @@ namespace BusinessManagers.Interfaces
         Task<UserProfile> GetUserProfile(int userId);
         Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed, int userId);
         Task<List<AcDetails>> GetUserAcCopy(int userId, int groupId);
+        Task<List<ChitPlans>> GetChitsDropDown();
     }
 }
