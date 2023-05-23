@@ -18,7 +18,7 @@ namespace BusinessManagers.Interfaces
         Task<int> AddChitPlan(ChitPlans chitPlans);
         Task<int> EnrollMent(int userId, int groupId, DateTime enrollmentDate, bool isActive);
         Task<int> UserRegistration(RegisteUsers registeUsers);
-        Task<int> CheckUserExist(int phone);
+        Task<int> CheckUserExist(string phone);
         Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails);
         Task<int> UserPayments(UserPayments userPayments);
         Task<List<UserPayments>> UserOutStandings(int groupId);

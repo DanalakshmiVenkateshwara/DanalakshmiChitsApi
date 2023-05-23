@@ -72,7 +72,7 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("CheckUserExist")]
-        public async Task<int> CheckUserExist(int phone )
+        public async Task<int> CheckUserExist(string phone )
         {
             return await _adminManger.CheckUserExist(phone);
         }

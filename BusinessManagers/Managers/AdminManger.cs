@@ -40,7 +40,7 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.UserRegistration(registeUsers);
         }
-        public async Task<int> CheckUserExist(int phone)
+        public async Task<int> CheckUserExist(string phone)
         {
             return await _adminRepository.CheckUserExist(phone);
         }
