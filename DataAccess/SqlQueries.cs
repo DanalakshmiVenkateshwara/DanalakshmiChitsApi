@@ -48,6 +48,8 @@ namespace DataAccess
         public const string Delete_EnrollMent = @"Update Enrollments set isActive = @isActive , closeDate = GetDate() where userId = @userId and groupId = @groupId";
 
         public const string EnrollMent = @"Insert into Enrollments (UserId,GroupId,enrollmentDate) values (@UserId,@GroupId,@enrollmentDate)";
+        public const string GET_Check_User_Exist = @"select count(*) from UserRegistration where Phone = @phone";
+
 
         public const string Get_EnrollMents_By_UserId = @"select Date [NextAuctionDate],c.Id[GroupId], g.status[UserChitSatus], g.NoOfMonthsCompleted[PaidUpto],c.Duration[TotalInstallMents] ,C.Duration,  C.groupName,C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId

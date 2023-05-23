@@ -64,13 +64,17 @@ namespace DanalakshmiChitsApi.Controllers
         {
             return await _adminManger.GetAuctionDetails(groupId);
         }
-
-
         [HttpPost]
         [Route("UserRegistration")]
         public async Task<int> UserRegistration(RegisteUsers registeUsers)
         {
             return await _adminManger.UserRegistration(registeUsers);
+        }
+        [HttpGet]
+        [Route("CheckUserExist")]
+        public async Task<int> CheckUserExist(int phone )
+        {
+            return await _adminManger.CheckUserExist(phone);
         }
 
         [HttpGet]

@@ -95,6 +95,10 @@ namespace DataAccess.Repositories
                 enrollmentDate
             });
         }
+        public async Task<int> CheckUserExist(int phone)
+        {
+            return await this.Find<int>(SqlQueries.GET_Check_User_Exist, new { phone = phone });
+        }
         public async Task<int> UserRegistration(RegisteUsers registeUsers)
         {
             if (!registeUsers.IsActive)
