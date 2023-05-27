@@ -10,6 +10,13 @@ using DanalakshmiChitsApi.App_Start;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Reflection;
+using System.Net;
+using System.Net.WebSockets;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Text;
+using System.Threading;
 
 namespace DanalakshmiChitsApi
 {
@@ -65,11 +72,53 @@ namespace DanalakshmiChitsApi
             //app.UseCors("DanalakshmiChitsCors");
             //app.UseAuthorization();
 
+            app.UseWebSockets();
+            var wsOptions = new WebSocketOptions { KeepAliveInterval = TimeSpan.FromSeconds(120) };
+            app.UseWebSockets(wsOptions);
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path == "/send")
+                {
+                    if (context.WebSockets.IsWebSocketRequest)
+                    {
+                        using (WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync())
+                        {
+                            await Send(context, webSocket);
+                        }
+                    }
+                    else
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    }
+                }
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
         }
+
+        private async Task Send(HttpContext context, WebSocket webSocket)
+        {
+            if (context.WebSockets.IsWebSocketRequest)
+            {
+                var buffer = new byte[1024 * 4];
+                WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), System.Threading.CancellationToken.None);
+                while (result != null)
+                {
+                    string msg = Encoding.UTF8.GetString(new ArraySegment<byte>(buffer, 0, result.Count));
+                    await webSocket.SendAsync(Encoding.ASCII.GetBytes($"Hi {msg} - {DateTime.Now}"), WebSocketMessageType.Text, true, CancellationToken.None);
+                    await Task.Delay(1000);
+                }
+                await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+            }
+            else
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            }
+        }
+
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly()).AsSelf().AsImplementedInterfaces();
