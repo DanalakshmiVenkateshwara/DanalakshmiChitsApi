@@ -105,11 +105,12 @@ namespace DanalakshmiChitsApi
             {
                 var buffer = new byte[1024 * 4];
                 WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), System.Threading.CancellationToken.None);
-                while (result != null)
+                while (!result.CloseStatus.HasValue)
                 {
                     string msg = Encoding.UTF8.GetString(new ArraySegment<byte>(buffer, 0, result.Count));
-                    await webSocket.SendAsync(Encoding.ASCII.GetBytes($"Hi {msg} - {DateTime.Now}"), WebSocketMessageType.Text, true, CancellationToken.None);
+                    await webSocket.SendAsync(Encoding.ASCII.GetBytes($"Hi {msg} - {DateTime.Now}"), WebSocketMessageType.Text, result.EndOfMessage, CancellationToken.None);
                     await Task.Delay(1000);
+                    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 }
                 await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
             }
