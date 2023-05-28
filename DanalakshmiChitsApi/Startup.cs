@@ -64,6 +64,7 @@ namespace DanalakshmiChitsApi
             //app.UseRouting();
             //app.UseCors("DanalakshmiChitsCors");
             //app.UseAuthorization();
+            app.UseWebSockets();
 
             app.UseEndpoints(endpoints =>
             {
