@@ -76,6 +76,15 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.AddAuctionDetails(auctionDetails);
         }
+        public async Task<UserProfile> ValidateUser(string userName, string password)
+        {
+            return await _adminRepository.ValidateUser(userName, password);
+        }
+
+        public async Task<int> ValidateGroup(string groupName)
+        {
+            return await _adminRepository.ValidateGroup(groupName);
+        }
     }
     
 }

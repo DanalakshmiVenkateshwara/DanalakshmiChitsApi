@@ -8,6 +8,7 @@ namespace BusinessObjects
 {
     public class UserProfile
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public long Phone { get; set; }
         public string Area { get; set; }

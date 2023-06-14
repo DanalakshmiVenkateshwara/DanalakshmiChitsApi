@@ -23,5 +23,7 @@ namespace BusinessManagers.Interfaces
         Task<int> UserPayments(UserPayments userPayments);
         Task<List<UserPayments>> UserOutStandings(int groupId);
         Task<int> AddAuctionDetails(AuctionDetails auctionDetails);
+        Task<UserProfile> ValidateUser(string userName, string password);
+        Task<int> ValidateGroup(string groupName);
     }
 }

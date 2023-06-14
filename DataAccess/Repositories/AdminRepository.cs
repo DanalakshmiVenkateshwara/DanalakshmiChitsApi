@@ -188,5 +188,14 @@ namespace DataAccess.Repositories
                 auctionDetails.Dividend
             });
         }
+        public async Task<UserProfile> ValidateUser (string userName, string password)
+        {
+            return await this.Find<UserProfile>(SqlQueries.ValidateUser, new { userName = userName, password = password });
+        }
+        public async Task<int> ValidateGroup(string groupName)
+        {
+            return await this.Find<int>(SqlQueries.ValidateGroup, new { groupName = groupName});
+        }
+        
     }
 }

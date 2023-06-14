@@ -109,5 +109,17 @@ namespace DanalakshmiChitsApi.Controllers
         {
             return await _adminManger.AddAuctionDetails(auctionDetails);
         }
+        [HttpGet]
+        [Route("ValidateUser")]
+        public async Task<UserProfile> ValidateUser(string userName, string password)
+        {
+            return await _adminManger.ValidateUser(userName, password);
+        }
+        [HttpGet]
+        [Route("ValidateGroup")]
+        public async Task<int> ValidateGroup(string groupName)
+        {
+            return await _adminManger.ValidateGroup(groupName);
+        }
     }
 }

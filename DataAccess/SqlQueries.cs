@@ -118,6 +118,9 @@ namespace DataAccess
             //                                             -- inner join userRegistration UR on UR.id=u.userId";
 
         public const string Add_Auction_Details = @"Insert into AuctionDetails (UserId,GroupId,AuctionAmount,AuctionDate,Dividend) values (@UserId,@GroupId,@AuctionAmount,@AuctionDate,@Dividend)";
+
+        public const string ValidateUser = @"select Id,Name from UserRegistration where name = @userName and Password = @password";
+        public const string ValidateGroup = @"select count(*) from ChitGroups where GroupName =@groupName ";
     }
 }
 
