@@ -45,6 +45,7 @@ namespace DanalakshmiChitsApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseRouting();
+            app.UseWebSockets();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
