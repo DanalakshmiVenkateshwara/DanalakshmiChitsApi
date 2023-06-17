@@ -47,8 +47,12 @@ namespace DataAccess.Repositories
             }
             else
                 return await this.All<UserPayments>(SqlQueries.Get_AuctionDetails);
-
         }
+        public async Task<int> GetPendingPayments(int userId, int groupId)
+        {
+            return await this.FindBy<int>(SqlQueries.Get_Pending_Payments, new { userId= userId, groupId= groupId });
+        }
+
         public async Task<int> AddAppUsers(AppUsers appUsers)
         {
             return await this.AddOrUpdateDynamic(SqlQueries.Add_APP_USER, new

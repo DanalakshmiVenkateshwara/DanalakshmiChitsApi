@@ -58,8 +58,10 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.GetAuctionDetails(groupId);
         }
-        
-
+        public async Task<int> GetPendingPayments(int userId, int groupId)
+        {
+            return await _adminRepository.GetPendingPayments(userId, groupId);
+        }
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)
         {
             return await _adminRepository.AuctionDetailsByGroup(groupWiseDetails);
