@@ -3,7 +3,7 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:4400"
+      "applicationUrl": "https://localhost:4400"
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
