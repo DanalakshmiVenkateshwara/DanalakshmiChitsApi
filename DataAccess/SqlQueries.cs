@@ -70,10 +70,11 @@ namespace DataAccess
         public const string Get_AuctionDetails_By_GroupId = @" select top 1   u.Id[UserId],c.InstallmentAmount[TotalAmount],u.name[UserName],G.NoOfMonthsCompleted[PaidUpTo],
                                                               G.dividend/c.NoOfMembers[Dividend],C.groupName, C.Id[GroupId],C.amount from GroupWiseDetails G 
 															  inner join ChitGroups C on c.Id= g.GroupId
-                                                           inner join UserRegistration u on u.id =G.UserId where g.groupId =4 order by g.id desc";
-        public const string Get_Pending_Payments = @"Select sum(InstallMentAmount)[DueAmount] from GroupWiseDetails 
-                                                          Where GroupId = @groupId AND NoOfMonthsCompleted not in 
-                                                          (Select PaymentMonth From UserPayments Where GroupId = @groupId AND USerID = @userId)";
+                                                           inner join UserRegistration u on u.id =G.UserId where g.groupId =@groupId order by g.id desc";
+        public const string Get_Pending_Payments = @"select (Select sum(InstallMentAmount) from GroupWiseDetails 
+                                                         Where GroupId = 1 ) - isNull((select Sum(CurrentMonthEmi) From UserPayments Where GroupId = @groupId AND USerID = @userId),0)";
+
+       
 
         public const string Get_AuctionDetails = @"select u.Id[UserId], c.InstallmentAmount[TotalAmount], u.name[UserName], G.NoOfMonthsCompleted[PaidUpTo],
                                                             G.dividend/c.NoOfMembers[Dividend], C.groupName, C.Id[GroupId], C.amount from GroupWiseDetails G
