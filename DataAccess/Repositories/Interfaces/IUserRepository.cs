@@ -14,5 +14,6 @@ namespace DataAccess.Repositories.Interfaces
         Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed, int userId);
         Task<List<AcDetails>> GetUserAcCopy(int userId, int groupId);
         Task<List<ChitPlans>> GetChitsDropDown();
+        Task<int> GetUserId(long mobileNo);
     }
 }

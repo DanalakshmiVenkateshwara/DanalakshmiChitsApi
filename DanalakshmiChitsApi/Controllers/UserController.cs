@@ -45,5 +45,11 @@ namespace DanalakshmiChitsApi.Controllers
         {
             return await _userManager.GetUserAcCopy(userId, groupId);
         }
+        [HttpGet]
+        [Route("GetUserId")]
+        public async Task<int> GetUserId(long mobileNo)
+        {
+            return await _userManager.GetUserId(mobileNo);
+        }
     }
 }

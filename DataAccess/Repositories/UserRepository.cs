@@ -44,6 +44,10 @@ namespace DataAccess.Repositories
             var totalpayments = pendingpayments.Union(compltedpayments).ToList();
             return totalpayments;
         }
-           
+        public async Task<int> GetUserId(long mobileNo)
+        {
+            return await this.FindBy<int>(SqlQueries.Get_User_Id_With_MobileNo, new { mobileNo = mobileNo });
+        }
+
     }
 }

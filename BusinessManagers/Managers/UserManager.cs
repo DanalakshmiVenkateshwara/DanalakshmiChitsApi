@@ -39,5 +39,9 @@ namespace DataAccess.Repositories.Managers
         {
             return await _userRepository.GetUserAcCopy(userId, groupId);
         }
+        public async Task<int> GetUserId(long mobileNo)
+        {
+            return await _userRepository.GetUserId(mobileNo);
+        }
     }
 }
