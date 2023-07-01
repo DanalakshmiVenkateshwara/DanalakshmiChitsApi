@@ -124,7 +124,7 @@ namespace DataAccess
 
         public const string Add_Auction_Details = @"Insert into AuctionDetails (UserId,GroupId,AuctionAmount,AuctionDate,Dividend) values (@UserId,@GroupId,@AuctionAmount,@AuctionDate,@Dividend)";
 
-        public const string ValidateUser = @"select Id,Name,IsAdmin from UserRegistration where Phone = @userName and Password = @password";
+        public const string ValidateUser = @"select Id,Name,Email,IsAdmin from UserRegistration where Phone = @userName and Password = @password";
         public const string ValidateGroup = @"select count(*) from ChitGroups where GroupName =@groupName ";
         public const string Get_User_Id_With_MobileNo = @"select id from UserRegistration where Phone = @mobileNo";
     }
