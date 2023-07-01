@@ -51,11 +51,12 @@ namespace DataAccess
         public const string GET_Check_User_Exist = @"select count(*) from UserRegistration where Phone = @phone";
 
 
-        public const string Get_EnrollMents_By_UserId = @"select Date [NextAuctionDate],c.Id[GroupId], g.status[UserChitSatus], g.NoOfMonthsCompleted[PaidUpto],c.Duration[TotalInstallMents] ,C.Duration,  C.groupName,C.amount from Enrollments E
+        public const string Get_EnrollMents_By_UserId = @"select top 1  Date [NextAuctionDate],c.Id[GroupId] , g.status[UserChitSatus], g.NoOfMonthsCompleted[PaidUpto],
+                                                           c.Duration[TotalInstallMents] ,C.Duration,  C.groupName,C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId
-														   inner join GroupWiseDetails g on g.userId = u.Id
-                                                           where e.userID = @UserId and e.IsActive = 1";
+														   inner join GroupWiseDetails g on g.GroupId = e.GroupId
+                                                           where e.userID = @UserId and e.IsActive = 1 order by g.NoOfMonthsCompleted desc";
 
         public const string Get_EnrollMents_By_GroupId = @"select u.Id[UserId],u.name[UserName],E.IsActive, E.EnrollmentDate,E.CloseDate, C.groupName,C.Id[GroupId],C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
@@ -123,7 +124,7 @@ namespace DataAccess
 
         public const string Add_Auction_Details = @"Insert into AuctionDetails (UserId,GroupId,AuctionAmount,AuctionDate,Dividend) values (@UserId,@GroupId,@AuctionAmount,@AuctionDate,@Dividend)";
 
-        public const string ValidateUser = @"select Id,Name from UserRegistration where name = @userName and Password = @password";
+        public const string ValidateUser = @"select Id,Name,IsAdmin from UserRegistration where Phone = @userName and Password = @password";
         public const string ValidateGroup = @"select count(*) from ChitGroups where GroupName =@groupName ";
         public const string Get_User_Id_With_MobileNo = @"select id from UserRegistration where Phone = @mobileNo";
     }
