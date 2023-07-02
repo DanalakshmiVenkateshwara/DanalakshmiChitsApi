@@ -15,6 +15,11 @@ namespace DanalakshmiChitsApi.Controllers
     {
         private static WebSocketConnectionManager _connectionManager = new WebSocketConnectionManager();
 
+        public WebSocketController(WebSocketConnectionManager connectionManager)
+        {
+            _connectionManager = connectionManager;
+        }
+
         [HttpGet]
         public async Task<IActionResult> Connect()
         {
@@ -42,10 +47,10 @@ namespace DanalakshmiChitsApi.Controllers
             if (result.MessageType == WebSocketMessageType.Text)
             {
                 var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                if (message == "{\"action\":\"handshake\"}")
+                if (message == "{\"action\":\"connect\"}")
                 {
                     // Send handshake response with connection ID
-                    var response = new { action = "handshakeResponse", connectionId = connectionId };
+                    var response = new { action = "connectResponse", connectionId = connectionId };
                     await webSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)),
                         WebSocketMessageType.Text, true, CancellationToken.None);
 
@@ -57,7 +62,18 @@ namespace DanalakshmiChitsApi.Controllers
             // Handle other messages (e.g., echo functionality)
             while (!result.CloseStatus.HasValue)
             {
+                var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                // Handle the received message
+
+                // Example: Send a signal to a specific client
+                await _connectionManager.SendMessageToClient(connectionId, "Hello from the server!");
+
+                // Example: Send a signal to all clients
+                await _connectionManager.SendMessageToAllClients("New user connected!");
+
+                // Echo the received message back to the client
                 await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             }
 
@@ -81,6 +97,22 @@ namespace DanalakshmiChitsApi.Controllers
         public void RemoveSocket(string connectionId)
         {
             _sockets.TryRemove(connectionId, out _);
+        }
+
+        public async Task SendMessageToClient(string connectionId, string message)
+        {
+            if (_sockets.TryGetValue(connectionId, out var socket))
+            {
+                await socket.SendAsync(Encoding.UTF8.GetBytes(message), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+        }
+
+        public async Task SendMessageToAllClients(string message)
+        {
+            foreach (var socket in _sockets.Values)
+            {
+                await socket.SendAsync(Encoding.UTF8.GetBytes(message), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
         }
     }
 }
