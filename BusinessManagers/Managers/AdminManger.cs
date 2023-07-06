@@ -54,9 +54,9 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.GetEnrollMents(userId,groupId, isActive);
         }
-        public async Task<List<UserPayments>> GetAuctionDetails(int groupId)
+        public async Task<List<UserPayments>> GetAuctionDetails(int groupId, int userId)
         {
-            return await _adminRepository.GetAuctionDetails(groupId);
+            return await _adminRepository.GetAuctionDetails(groupId, userId);
         }
         public async Task<int> GetPendingPayments(int userId, int groupId)
         {
@@ -70,9 +70,9 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.UserPayments(userPayments);
         }
-        public async Task<List<UserPayments>> UserOutStandings(int groupId)
+        public async Task<List<UserPayments>> UserOutStandings(int groupId, int userId)
         {
-            return await _adminRepository.UserOutStandings(groupId);
+            return await _adminRepository.UserOutStandings(groupId, userId);
         }
         public async Task<int> AddAuctionDetails(AuctionDetails auctionDetails)
         {

@@ -66,9 +66,9 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("GetAuctionDetails/{groupId}")]
-        public async Task<List<UserPayments>> GetAuctionDetails(int groupId)
+        public async Task<List<UserPayments>> GetAuctionDetails(int groupId, int userId)
         {
-            return await _adminManger.GetAuctionDetails(groupId);
+            return await _adminManger.GetAuctionDetails(groupId, userId);
         }
         [HttpPost]
         [Route("UserRegistration")]
@@ -104,9 +104,9 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("UserOutStandings")]
-        public async Task<List<UserPayments>> UserOutStandings(int groupId)
+        public async Task<List<UserPayments>> UserOutStandings(int groupId, int userId)
         {
-            return await _adminManger.UserOutStandings(groupId);
+            return await _adminManger.UserOutStandings(groupId, userId);
         }
 
         [HttpPost]

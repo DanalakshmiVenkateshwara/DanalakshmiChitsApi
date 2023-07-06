@@ -30,7 +30,7 @@ namespace DanalakshmiChitsApi
             //services.AddSwaggerGen();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "PracticeSol", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DanalakshmiChitsApi", Version = "v1" });
             });
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.AddCors(o => o.AddPolicy("DanalakshmiChitsCors", builder =>
@@ -53,7 +53,7 @@ namespace DanalakshmiChitsApi
                 //app.UseSwagger();
                 //app.UseSwaggerUI();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PracticeSol v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DanalakshmiChitsApi v1"));
             }
             else
                 app.UseCors("DanalakshmiChitsCors");

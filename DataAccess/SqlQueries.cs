@@ -113,6 +113,11 @@ namespace DataAccess
                                                                   inner join chitGroups c on c.id=u.groupId
                                                                   inner join userRegistration UR on UR.id=u.userId where groupid=@groupid";
 
+        public const string Get_UserOutStandings_By_UserId = @"select UR.Name[Username],C.GroupName,u.UserId,u.GroupId,u.CurrentMonthEmi,u.Dividend,u.TotalAmount,u.DueAmount,u.AuctionDAte,u.PaymentDate,u.PaymentMonth,U.Raised from UserPayments u
+                                                                  inner join chitGroups c on c.id=u.groupId
+                                                                  inner join userRegistration UR on UR.id=u.userId where userId = @userId";
+
+
         public const string Get_All_UserOutStandings = @"select UR.Name[Username],C.GroupName,u.UserId,u.GroupId,u.CurrentMonthEmi,u.Dividend,u.TotalAmount,u.DueAmount,u.AuctionDAte,u.PaymentDate,u.PaymentMonth,U.Raised from UserPayments u
                                                           inner join chitGroups c on c.id=u.groupId
                                                           inner join userRegistration UR on UR.id=u.userId";

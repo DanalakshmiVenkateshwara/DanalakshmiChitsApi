@@ -40,10 +40,15 @@ namespace DataAccess.Repositories
             else
                 return await this.All<EnrollMents>(SqlQueries.Get_All_EnrollMents, new { isActive });
         }
-        public async Task<List<UserPayments>>  GetAuctionDetails(int groupId)
+        public async Task<List<UserPayments>>  GetAuctionDetails(int groupId, int userId)
         {
-            if (groupId > 0) { 
-                return await this.All<UserPayments>(SqlQueries.Get_AuctionDetails_By_GroupId, new { groupId });
+            if (groupId > 0) {
+                var patmentDetails = await this.All<UserPayments>(SqlQueries.Get_AuctionDetails_By_GroupId, new { groupId });
+                if (patmentDetails.Count > 0)
+                {
+                    patmentDetails[0].DueAmount = await this.FindBy<int>(SqlQueries.Get_Pending_Payments, new { userId = userId, groupId = groupId });
+                }
+                return patmentDetails;
             }
             else
                 return await this.All<UserPayments>(SqlQueries.Get_AuctionDetails);
@@ -174,10 +179,12 @@ namespace DataAccess.Repositories
             });
         }
         //we need to chnage the query and table 
-        public async Task<List<UserPayments>> UserOutStandings(int groupId)
+        public async Task<List<UserPayments>> UserOutStandings(int groupId, int userId)
         {
             if (groupId > 0)
                 return await this.All<UserPayments>(SqlQueries.Get_UserOutStandings_By_GroupId, new { groupId });
+            else if (userId > 0)
+                return await this.All<UserPayments>(SqlQueries.Get_UserOutStandings_By_UserId, new { userId });
             else
                 return await this.All<UserPayments>(SqlQueries.Get_All_UserOutStandings);
         }
