@@ -124,10 +124,12 @@ namespace DanalakshmiChitsApi.Controllers
             var jsonMessage = JsonSerializer.Serialize(message);
             var buffer = Encoding.UTF8.GetBytes(jsonMessage);
 
+            var sendTasks = new List<Task>();
             foreach (var socket in _connectionManager.GetAllSockets())
             {
-                await socket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+                sendTasks.Add(socket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None));
             }
+            await Task.WhenAll(sendTasks);
         }
     }
 
