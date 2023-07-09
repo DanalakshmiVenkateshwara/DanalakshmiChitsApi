@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -15,18 +16,45 @@ namespace DanalakshmiChitsApi.Controllers
     {
         private static WebSocketConnectionManager _connectionManager = new WebSocketConnectionManager();
 
-        public WebSocketController(WebSocketConnectionManager connectionManager)
-        {
-            _connectionManager = connectionManager;
-        }
-
         [HttpGet]
-        public async Task<IActionResult> Connect()
+        public async Task<IActionResult> Connect(string connectionId, string userDetails)
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                var connectionId = _connectionManager.AddSocket(webSocket);
+                var isNewConnection = string.IsNullOrEmpty(connectionId);
+                //var userDetailsObject = JsonSerializer.Deserialize<UserDetails>(userDetails);
+                //Console.WriteLine("User Details: " + userDetailsObject.Username);
+                if (isNewConnection)
+                {
+                    connectionId = _connectionManager.AddSocket(webSocket);
+
+                    // Store the connection ID in local storage
+                    // Note: You may need to modify this based on your React app's storage mechanism
+                    // For example, if you're using React-Redux, you can dispatch an action to store the connection ID in the Redux store
+                    // Here, we're using browser's localStorage for simplicity
+                    //localStorage.setItem('connectionId', connectionId);
+                   
+                }
+                _connectionManager.AddConnectedClient(connectionId, userDetails);
+                var response = new { Action = "connectResponse", connectionId = connectionId };
+                await webSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)),
+                    WebSocketMessageType.Text, true, CancellationToken.None);
+
+                // Send the list of connected clients to the new client
+                var connectedClients = _connectionManager.GetConnectedClients();
+                //await SendToClient(webSocket, "connectedClients", connectedClients);
+
+                if (isNewConnection)
+                {
+                    // Add the new client to the list of connected clients
+                    //_connectionManager.AddConnectedClient(connectionId);
+                   // var connectedClients = _connectionManager.GetConnectedClients();
+                    // Broadcast the updated list of connected clients to all clients
+                    await BroadcastToAll("connectedClients", connectedClients);
+                }
+                //var connectedClients = _connectionManager.GetConnectedClients();
+                await SendToClient(webSocket, "connectedClients", connectedClients);
 
                 await HandleWebSocketConnection(webSocket, connectionId);
             }
@@ -43,49 +71,70 @@ namespace DanalakshmiChitsApi.Controllers
             var buffer = new byte[1024 * 4];
             WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
-            // Handshake request
-            if (result.MessageType == WebSocketMessageType.Text)
-            {
-                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                if (message == "{\"action\":\"connect\"}")
-                {
-                    // Send handshake response with connection ID
-                    var response = new { action = "connectResponse", connectionId = connectionId };
-                    await webSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)),
-                        WebSocketMessageType.Text, true, CancellationToken.None);
-
-                    // Continue handling other messages
-                    result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                }
-            }
-
-            // Handle other messages (e.g., echo functionality)
             while (!result.CloseStatus.HasValue)
             {
-                var receivedMessage = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                // Handle the received message
+                // Handle WebSocket messages based on the received action
+                var message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                var jsonMessage = JsonSerializer.Deserialize<WebSocketMessage>(message);
 
-                // Example: Send a signal to a specific client
-                await _connectionManager.SendMessageToClient(connectionId, "Hello from the server!");
+                switch (jsonMessage.Action)
+                {
+                    case "sendMessage":
+                        // Process the received message (e.g., chat functionality)
+                        var sender = _connectionManager.GetConnectedClient(connectionId);
+                        var data = new { sender.User, message = jsonMessage.Data };
+                        await BroadcastToAll("receiveMessage", data);
+                        break;
+                    case "connected":
+                        var response = new { Action = "connectResponse", connectionId = connectionId };
+                        await webSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)),
+                            WebSocketMessageType.Text, true, CancellationToken.None);
+                        var connectedClients = _connectionManager.GetConnectedClients();
+                        //await SendToClient(webSocket, "connectedClients", connectedClients);
+                        //// Continue handling other messages
+                        //result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                        break;
 
-                // Example: Send a signal to all clients
-                await _connectionManager.SendMessageToAllClients("New user connected!");
+                    // Add more cases to handle other actions
 
-                // Echo the received message back to the client
-                await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+                    default:
+                        // Invalid action, ignore the message
+                        break;
+                }
 
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             }
 
             // Clean up the connection
             _connectionManager.RemoveSocket(connectionId);
+            _connectionManager.RemoveConnectedClient(connectionId);
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+        }
+
+        private async Task SendToClient(WebSocket webSocket, string action, object data)
+        {
+            var message = new WebSocketMessage { Action = action, Data = data };
+            var jsonMessage = JsonSerializer.Serialize(message);
+            await webSocket.SendAsync(Encoding.UTF8.GetBytes(jsonMessage), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
+        private async Task BroadcastToAll(string action, object data)
+        {
+            var message = new WebSocketMessage { Action = action, Data = data };
+            var jsonMessage = JsonSerializer.Serialize(message);
+            var buffer = Encoding.UTF8.GetBytes(jsonMessage);
+
+            foreach (var socket in _connectionManager.GetAllSockets())
+            {
+                await socket.SendAsync(new ArraySegment<byte>(buffer), WebSocketMessageType.Text, true, CancellationToken.None);
+            }
         }
     }
 
     public class WebSocketConnectionManager
     {
         private ConcurrentDictionary<string, WebSocket> _sockets = new ConcurrentDictionary<string, WebSocket>();
+        private ConcurrentDictionary<string, ClientInfo> _connectedClients = new ConcurrentDictionary<string, ClientInfo>();
 
         public string AddSocket(WebSocket socket)
         {
@@ -99,20 +148,67 @@ namespace DanalakshmiChitsApi.Controllers
             _sockets.TryRemove(connectionId, out _);
         }
 
-        public async Task SendMessageToClient(string connectionId, string message)
+        public IEnumerable<WebSocket> GetAllSockets()
         {
-            if (_sockets.TryGetValue(connectionId, out var socket))
-            {
-                await socket.SendAsync(Encoding.UTF8.GetBytes(message), WebSocketMessageType.Text, true, CancellationToken.None);
-            }
+            return _sockets.Values;
         }
 
-        public async Task SendMessageToAllClients(string message)
+        public void AddConnectedClient(string connectionId,string userDetails)
         {
-            foreach (var socket in _sockets.Values)
-            {
-                await socket.SendAsync(Encoding.UTF8.GetBytes(message), WebSocketMessageType.Text, true, CancellationToken.None);
-            }
+            // Retrieve additional user details from the React app (e.g., username)
+            // and store them along with the connection ID
+            // Modify this logic based on how you retrieve user details from the React app
+
+            var user = JsonSerializer.Deserialize<UserDetails>(userDetails);
+            //Console.WriteLine("User Details: " + userDetailsObject.Username);
+       
+            var clientInfo = new ClientInfo { ConnectionId = connectionId, User = new UserDetails { Username= user.Username, Email=user.Email } };
+
+            _connectedClients.TryAdd(connectionId, clientInfo);
         }
+
+        public void RemoveConnectedClient(string connectionId)
+        {
+            _connectedClients.TryRemove(connectionId, out _);
+        }
+
+        public System.Collections.Generic.IEnumerable<ClientInfo> GetConnectedClients()
+        {
+            return _connectedClients.Values;
+        }
+
+        public ClientInfo GetConnectedClient(string connectionId)
+        {
+            _connectedClients.TryGetValue(connectionId, out var clientInfo);
+            return clientInfo;
+        }
+
+        //private string RetrieveUserDetailsFromReactApp(string connectionId)
+        //{
+        //    // Implement the logic to retrieve user details (e.g., username)
+        //    // from the React app using the connection ID
+        //    // This could involve making API calls or accessing a shared storage mechanism
+
+        //    // Return the user details associated with the connection ID
+        //    // If the user details are not available or retrieved, return a default value
+        //    return "Default User";
+        //}
+    }
+
+    public class ClientInfo
+    {
+        public string ConnectionId { get; set; }
+        public UserDetails User { get; set; }
+    }
+
+    public class WebSocketMessage
+    {
+        public string Action { get; set; }
+        public object Data { get; set; }
+    }
+    public class UserDetails
+    {
+        public string Username { get; set; }
+        public string Email { get; set; }
     }
 }
