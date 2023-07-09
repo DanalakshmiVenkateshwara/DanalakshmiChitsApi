@@ -14,7 +14,7 @@ namespace DanalakshmiChitsApi
     public class Program
     {
 
-        public static readonly string ApplicationName = "PracticeSol";
+        public static readonly string ApplicationName = "DanalakshmiChitsApi";
 
         private static readonly Func<IConfiguration> DefaultConfigurationSetup =
          () => new ConfigurationBuilder()

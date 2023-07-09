@@ -12,7 +12,7 @@ namespace DataAccess.Repositories.Interfaces
         Task<AdminProfile> GetAdminProfile();
         Task<List<AppUsers>> GetAppUsers();
         Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId, bool isActive);
-        Task<List<UserPayments>> GetAuctionDetails(int groupId);
+        Task<List<UserPayments>> GetAuctionDetails(int groupId, int userId);
         Task<int> AddAppUsers(AppUsers appUsers);
         Task<List<RegisteUsers>> GetUsers(int userId, bool isActive);
         Task<int> AddChitPlan(ChitPlans chitPlans);
@@ -21,7 +21,7 @@ namespace DataAccess.Repositories.Interfaces
         Task<int> CheckUserExist(string phone);
         Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails);
         Task<int> UserPayments(UserPayments userPayments);
-        Task<List<UserPayments>> UserOutStandings(int groupId);
+        Task<List<UserPayments>> UserOutStandings(int groupId , int userId);
         Task<int> AddAuctionDetails(AuctionDetails auctionDetails);
         Task<UserProfile> ValidateUser(string userName, string password);
         Task<int> ValidateGroup(string groupName);

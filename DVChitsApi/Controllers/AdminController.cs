@@ -1,13 +1,11 @@
 ﻿using BusinessManagers.Interfaces;
 using BusinessObjects;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace DanalakshmiChitsApi.Controllers
+namespace DVChitsApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -56,7 +54,7 @@ namespace DanalakshmiChitsApi.Controllers
         [Route("GetEnrollMents/{userId}/{groupId}/{isActive}")]
         public async Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId, bool isActive)
         {
-            return await _adminManger.GetEnrollMents(userId,groupId, isActive);
+            return await _adminManger.GetEnrollMents(userId, groupId, isActive);
         }
         [HttpGet]
         [Route("GetPendingPayments")]
@@ -66,9 +64,9 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("GetAuctionDetails/{groupId}")]
-        public async Task<List<UserPayments>> GetAuctionDetails(int groupId, int userId)
+        public async Task<List<UserPayments>> GetAuctionDetails(int groupId)
         {
-            return await _adminManger.GetAuctionDetails(groupId, userId);
+            return await _adminManger.GetAuctionDetails(groupId);
         }
         [HttpPost]
         [Route("UserRegistration")]
@@ -78,18 +76,18 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("CheckUserExist")]
-        public async Task<int> CheckUserExist(string phone )
+        public async Task<int> CheckUserExist(string phone)
         {
             return await _adminManger.CheckUserExist(phone);
         }
 
         [HttpGet]
         [Route("GetUsers/{userId}/{isActive}")]
-        public async Task<List<RegisteUsers>> GetUsers(int userId,bool isActive)
+        public async Task<List<RegisteUsers>> GetUsers(int userId, bool isActive)
         {
             return await _adminManger.GetUsers(userId, isActive);
         }
-        
+
         [HttpPost]
         [Route("AuctionDetailsByGroup")]
         public async Task<int> AuctionDetailsByGroup(GroupWiseDetails groupWiseDetails)
@@ -104,9 +102,9 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("UserOutStandings")]
-        public async Task<List<UserPayments>> UserOutStandings(int groupId, int userId)
+        public async Task<List<UserPayments>> UserOutStandings(int groupId)
         {
-            return await _adminManger.UserOutStandings(groupId, userId);
+            return await _adminManger.UserOutStandings(groupId);
         }
 
         [HttpPost]

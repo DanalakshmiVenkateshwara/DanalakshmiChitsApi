@@ -1,15 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31410.357
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DanalakshmiChitsApi", "DanalakshmiChitsApi\DanalakshmiChitsApi.csproj", "{62910694-52E2-4685-A5AF-7BB844B8E8E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DanalakshmiChitsApi", "DanalakshmiChitsApi\DanalakshmiChitsApi.csproj", "{62910694-52E2-4685-A5AF-7BB844B8E8E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessManagers", "BusinessManagers\BusinessManagers.csproj", "{7B7E695A-FC3E-4152-83C7-6900EE15529C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessManagers", "BusinessManagers\BusinessManagers.csproj", "{7B7E695A-FC3E-4152-83C7-6900EE15529C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{8E56EA3A-3E53-45BD-98C4-B2D9D18CC91D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessObjects", "BusinessObjects\BusinessObjects.csproj", "{8E56EA3A-3E53-45BD-98C4-B2D9D18CC91D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{03587A86-DDD2-4EE9-83B3-0CB9DC058259}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{03587A86-DDD2-4EE9-83B3-0CB9DC058259}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVChitsApi", "DVChitsApi\DVChitsApi.csproj", "{FBD1FF1E-F69D-48E4-9C0D-C7FFF195901E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{03587A86-DDD2-4EE9-83B3-0CB9DC058259}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03587A86-DDD2-4EE9-83B3-0CB9DC058259}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03587A86-DDD2-4EE9-83B3-0CB9DC058259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBD1FF1E-F69D-48E4-9C0D-C7FFF195901E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBD1FF1E-F69D-48E4-9C0D-C7FFF195901E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBD1FF1E-F69D-48E4-9C0D-C7FFF195901E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBD1FF1E-F69D-48E4-9C0D-C7FFF195901E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
