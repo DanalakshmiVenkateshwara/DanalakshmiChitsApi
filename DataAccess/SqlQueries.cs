@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -39,7 +40,7 @@ namespace DataAccess
 
         public const string GET_USER_PROFILE = @"Select * from USERPROFILE where Id = @UserId";
 
-        public const string Get_User_Ac_Copy = @"select groupId,UserId, paymentDate, Totalamount, dueamount, paymentMonth from UserPayments where groupId = @groupId and userId = @userId";
+        public const string Get_User_Ac_Copy = @"select groupId,UserId, paymentDate, CurrentMonthEmi[Totalamount], (Totalamount-(CurrentMonthEmi+Dividend)) [dueamount], paymentMonth from UserPayments where groupId = @groupId and userId = @userId";
 
         public const string Get_User_Pending_Payments = @"Select groupId,UserId,InstallMentAmount[DueAmount], NoOfMonthsCompleted[PaymentMonth] from GroupWiseDetails 
                                                           Where GroupId = @groupId AND NoOfMonthsCompleted not in 
@@ -47,16 +48,20 @@ namespace DataAccess
 
         public const string Delete_EnrollMent = @"Update Enrollments set isActive = @isActive , closeDate = GetDate() where userId = @userId and groupId = @groupId";
 
-        public const string EnrollMent = @"Insert into Enrollments (UserId,GroupId,enrollmentDate) values (@UserId,@GroupId,@enrollmentDate)";
+        public const string EnrollMent = @"Insert into Enrollments (UserId,GroupId,enrollmentDate , IsActive) values (@UserId,@GroupId,@enrollmentDate, @isActive)";
         public const string GET_Check_User_Exist = @"select count(*) from UserRegistration where Phone = @phone";
 
+        public const string Get_EnrollMents_By_UserId = @"select c.Id[GroupId], c.GroupName,C.Duration, C.amount, c.Duration[TotalInstallMents] from enrollments e
+                                                                      inner join ChitGroups c on c.id = e.groupid where e.userid= @UserId";
 
-        public const string Get_EnrollMents_By_UserId = @"select top 1  Date [NextAuctionDate],c.Id[GroupId] , g.status[UserChitSatus], g.NoOfMonthsCompleted[PaidUpto],
-                                                           c.Duration[TotalInstallMents] ,C.Duration,  C.groupName,C.amount from Enrollments E
-                                                           inner join ChitGroups C on c.Id= e.GroupId
-                                                           inner join UserRegistration u on u.id =e.UserId
-														   inner join GroupWiseDetails g on g.GroupId = e.GroupId
-                                                           where e.userID = @UserId and e.IsActive = 1 order by g.NoOfMonthsCompleted desc";
+        public const string Get_RunningMonth_By_GroupId = @"select top 1 NoOfMonthsCompleted from GroupWiseDetails where groupId = @groupId order by id desc";
+        public const string Get_User_Chit_Status = @"select count(*) from GroupWiseDetails where groupId = @groupId  and userid =@userId";
+        //public const string Get_EnrollMents_By_UserId = @"select top 1  Date [NextAuctionDate],c.Id[GroupId] , g.status[UserChitSatus], g.NoOfMonthsCompleted[PaidUpto],
+        //                                                   c.Duration[TotalInstallMents] ,C.Duration,  C.groupName,C.amount from Enrollments E
+        //                                                   inner join ChitGroups C on c.Id= e.GroupId
+        //                                                   inner join UserRegistration u on u.id =e.UserId
+        //						   inner join GroupWiseDetails g on g.GroupId = e.GroupId
+        //                                                   where e.userID = @UserId and e.IsActive = 1 order by g.NoOfMonthsCompleted desc";
 
         public const string Get_EnrollMents_By_GroupId = @"select u.Id[UserId],u.name[UserName],E.IsActive, E.EnrollmentDate,E.CloseDate, C.groupName,C.Id[GroupId],C.amount from Enrollments E
                                                            inner join ChitGroups C on c.Id= e.GroupId
