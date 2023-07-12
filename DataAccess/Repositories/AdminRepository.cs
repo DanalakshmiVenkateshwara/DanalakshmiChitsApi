@@ -196,7 +196,6 @@ namespace DataAccess.Repositories
 
             if (emiAmount >0) //userPayments.TotalDue > userPayments.DueAmount &&
             {
-
                 return await this.AddOrUpdateDynamic(SqlQueries.UpdateUserPayments, new
                 {
 
