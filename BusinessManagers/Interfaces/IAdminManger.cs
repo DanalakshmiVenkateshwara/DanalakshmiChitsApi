@@ -12,6 +12,7 @@ namespace BusinessManagers.Interfaces
         Task<AdminProfile> GetAdminProfile();
         Task<List<RegisteUsers>> GetUsers(int userId, bool isActive);
         Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId, bool isActive);
+        Task<int> GetEnrollMentsCount(int groupId);
         Task<List<UserPayments>> GetAuctionDetails(int groupId, int userId);
         Task<List<AppUsers>> GetAppUsers();
         Task<int> AddAppUsers(AppUsers appUsers);

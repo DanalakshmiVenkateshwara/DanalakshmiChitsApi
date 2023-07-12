@@ -12,6 +12,7 @@ namespace DataAccess.Repositories.Interfaces
         Task<AdminProfile> GetAdminProfile();
         Task<List<AppUsers>> GetAppUsers();
         Task<List<EnrollMents>> GetEnrollMents(int userId, int groupId, bool isActive);
+        Task<int> GetEnrollMentsCount(int groupId);
         Task<List<UserPayments>> GetAuctionDetails(int groupId, int userId);
         Task<int> AddAppUsers(AppUsers appUsers);
         Task<List<RegisteUsers>> GetUsers(int userId, bool isActive);

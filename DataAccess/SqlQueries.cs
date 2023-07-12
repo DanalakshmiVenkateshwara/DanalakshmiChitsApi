@@ -72,15 +72,18 @@ namespace DataAccess
                                                            inner join ChitGroups C on c.Id= e.GroupId
                                                            inner join UserRegistration u on u.id =e.UserId where E.isActive = @isActive";
 
-
-        public const string Get_AuctionDetails_By_GroupId = @" select top 1   u.Id[UserId],c.InstallmentAmount[TotalAmount],u.name[UserName],G.NoOfMonthsCompleted[PaidUpTo],
+        public const string Get_EnrollMents_Count = @"select count(*) from enrollments where groupId= @groupId";
+        public const string Get_AuctionDetails_By_GroupId = @" select top 1   u.Id[UserId],c.InstallmentAmount[TotalAmount],u.name[UserName],G.installmentamount[DueAmount],G.NoOfMonthsCompleted[PaidUpTo],
                                                               G.dividend/c.NoOfMembers[Dividend],C.groupName, C.Id[GroupId],C.amount from GroupWiseDetails G 
 															  inner join ChitGroups C on c.Id= g.GroupId
                                                            inner join UserRegistration u on u.id =G.UserId where g.groupId =@groupId order by g.id desc";
         public const string Get_Pending_Payments = @"select (Select sum(InstallMentAmount) from GroupWiseDetails 
                                                          Where GroupId = @groupId ) - isNull((select Sum(CurrentMonthEmi) From UserPayments Where GroupId = @groupId AND USerID = @userId),0)";
 
-       
+        public const string Get_UserDues = @"select g.noofmonthscompleted[Installmentmonth],(g.dividend/c.NoOfMembers) [dividend], (g.installmentamount+(g.dividend/c.NoOfMembers))[installmentamount] ,g.installmentamount[dueAmount] from groupwisedetails g
+                                                inner join ChitGroups c on c.id=g.groupId where groupid =@groupId";
+
+        public const string Get_User_MonthWise_Due = @"select totalamount - (currentmonthemi+dividend) from userpayments where userid=@userId and groupid =@groupId and paymentmonth=@paymentMonth";
 
         public const string Get_AuctionDetails = @"select u.Id[UserId], c.InstallmentAmount[TotalAmount], u.name[UserName], G.NoOfMonthsCompleted[PaidUpTo],
                                                             G.dividend/c.NoOfMembers[Dividend], C.groupName, C.Id[GroupId], C.amount, g.AuctionDate from GroupWiseDetails G
@@ -113,7 +116,11 @@ namespace DataAccess
         public const string UserPayments = @"Insert into UserPayments 
                                           (UserId,GroupId,CurrentMonthEmi,Dividend,TotalAmount,DueAmount,AuctionDate,PaymentDate,FullyPaid,PaymentMonth,Raised)
                                           values(@UserId,@GroupId,@CurrentMonthEmi,@Dividend,@TotalAmount,@DueAmount,@AuctionDate,@PaymentDate,@FullyPaid,@PaymentMonth,@Raised)";
-        
+
+        public const string Get_Emi_Amount = @"select currentmonthemi from userpayments where userid=@UserId and groupid=@GroupId and PaymentMonth = @PaymentMonth ";
+
+        public const string UpdateUserPayments = @"update UserPayments set DueAmount = @DueAmount, CurrentMonthEmi = @CurrentMonthEmi where userId=@UserId and groupId=@GroupId and PaymentMonth = @PaymentMonth";
+
         public const string Get_UserOutStandings_By_GroupId = @"select UR.Name[Username],C.GroupName,u.UserId,u.GroupId,u.CurrentMonthEmi,u.Dividend,u.TotalAmount,u.DueAmount,u.AuctionDAte,u.PaymentDate,u.PaymentMonth,U.Raised from UserPayments u
                                                                   inner join chitGroups c on c.id=u.groupId
                                                                   inner join userRegistration UR on UR.id=u.userId where groupid=@groupid";

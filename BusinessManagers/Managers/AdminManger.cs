@@ -54,6 +54,10 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.GetEnrollMents(userId,groupId, isActive);
         }
+        public async Task<int> GetEnrollMentsCount(int groupId)
+        {
+            return await _adminRepository.GetEnrollMentsCount(groupId);
+        }
         public async Task<List<UserPayments>> GetAuctionDetails(int groupId, int userId)
         {
             return await _adminRepository.GetAuctionDetails(groupId, userId);

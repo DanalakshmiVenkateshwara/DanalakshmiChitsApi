@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
@@ -56,13 +57,28 @@ namespace DataAccess.Repositories
             else
                 return await this.All<EnrollMents>(SqlQueries.Get_All_EnrollMents, new { isActive });
         }
+        public async Task<int> GetEnrollMentsCount(int groupId)
+        {
+            return await this.Find<int>(SqlQueries.Get_EnrollMents_Count, new { groupId });
+        }
         public async Task<List<UserPayments>>  GetAuctionDetails(int groupId, int userId)
         {
             if (groupId > 0) {
                 var patmentDetails = await this.All<UserPayments>(SqlQueries.Get_AuctionDetails_By_GroupId, new { groupId });
                 if (patmentDetails.Count > 0)
                 {
-                    patmentDetails[0].DueAmount = await this.FindBy<int>(SqlQueries.Get_Pending_Payments, new { userId = userId, groupId = groupId });
+                    patmentDetails[0].TotalDue = await this.FindBy<int>(SqlQueries.Get_Pending_Payments, new { userId = userId, groupId = groupId });
+                    var userDues = await this.All<UserDues>(SqlQueries.Get_UserDues, new { groupId = groupId });
+                    if (userDues.Any())
+                    {
+                        foreach ( var userDue in userDues)
+                        {
+                            var due = await this.FindBy<string>(SqlQueries.Get_User_MonthWise_Due, new { userId = userId, groupId = groupId, paymentMonth = userDue.Installmentmonth });
+                            if (due !=null)
+                                userDue.dueAmount = Convert.ToInt32(due);
+                        }
+                        patmentDetails[0].userDues = userDues.Where(x => x.dueAmount > 0).ToList();
+                    }
                 }
                 return patmentDetails;
             }
@@ -148,7 +164,7 @@ namespace DataAccess.Repositories
             else {
                 return await this.AddOrUpdateDynamic(SqlQueries.RegisteUsers, new
                 {
-                    registeUsers.Name,
+                    name = registeUsers.Name +"-"+ registeUsers.Phone,
                     registeUsers.Phone,
                     registeUsers.EMail,
                     registeUsers.Password,
@@ -176,24 +192,43 @@ namespace DataAccess.Repositories
         }
         public async Task<int> UserPayments(UserPayments userPayments)
         {
-            return await this.AddOrUpdateDynamic(SqlQueries.UserPayments, new
+            var emiAmount = await this.Find<int>(SqlQueries.Get_Emi_Amount, new { UserId = userPayments.UserId, GroupId = userPayments.GroupId, PaymentMonth = userPayments.PaymentMonth });
+
+            if (emiAmount >0) //userPayments.TotalDue > userPayments.DueAmount &&
             {
-                
-                UserId = userPayments.UserId,
-                GroupId = userPayments.GroupId,
-                CurrentMonthEmi =userPayments.CurrentMonthEmi,
-                Dividend =userPayments.Dividend,
-                TotalAmount =userPayments.TotalAmount,
-                DueAmount = userPayments.DueAmount,
-                //userPayments.DueAmount,
-                //AuctionDate =userPayments.AuctionDate,
-                AuctionDate = DateTime.Now,
-                PaymentDate = DateTime.Now,
-                //userPayments.PaymentDate,
-                FullyPaid =userPayments.FullyPaid,
-                PaymentMonth =userPayments.PaymentMonth,
-                Raised =userPayments.Raised
-            });
+
+                return await this.AddOrUpdateDynamic(SqlQueries.UpdateUserPayments, new
+                {
+
+                    UserId = userPayments.UserId,
+                    GroupId = userPayments.GroupId,
+                    DueAmount = userPayments.DueAmount - emiAmount,
+                    CurrentMonthEmi = userPayments.CurrentMonthEmi + Convert.ToInt32(emiAmount),
+                    PaymentDate = DateTime.Now,
+                    PaymentMonth = userPayments.PaymentMonth
+                });
+            }
+            else
+            {
+                return await this.AddOrUpdateDynamic(SqlQueries.UserPayments, new
+                {
+
+                    UserId = userPayments.UserId,
+                    GroupId = userPayments.GroupId,
+                    CurrentMonthEmi = userPayments.CurrentMonthEmi,
+                    Dividend = userPayments.Dividend,
+                    TotalAmount = userPayments.TotalAmount,
+                    DueAmount = userPayments.TotalAmount - (userPayments.CurrentMonthEmi + userPayments.Dividend),
+                    //userPayments.DueAmount,
+                    //AuctionDate =userPayments.AuctionDate,
+                    AuctionDate = DateTime.Now,
+                    PaymentDate = DateTime.Now,
+                    //userPayments.PaymentDate,
+                    FullyPaid = userPayments.FullyPaid,
+                    PaymentMonth = userPayments.PaymentMonth,
+                    Raised = userPayments.Raised
+                });
+            }
         }
         //we need to chnage the query and table 
         public async Task<List<UserPayments>> UserOutStandings(int groupId, int userId)

@@ -59,6 +59,12 @@ namespace DanalakshmiChitsApi.Controllers
             return await _adminManger.GetEnrollMents(userId,groupId, isActive);
         }
         [HttpGet]
+        [Route("GetEnrollMentsCount")]
+        public async Task<int> GetEnrollMentsCount(int groupId)
+        {
+            return await _adminManger.GetEnrollMentsCount(groupId);
+        }
+        [HttpGet]
         [Route("GetPendingPayments")]
         public async Task<int> GetPendingPayments(int userId, int groupId)
         {
