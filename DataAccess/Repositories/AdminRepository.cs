@@ -202,7 +202,7 @@ namespace DataAccess.Repositories
 
                     UserId = userPayments.UserId,
                     GroupId = userPayments.GroupId,
-                    DueAmount = userPayments.DueAmount - emiAmount,
+                    DueAmount = userPayments.DueAmount - userPayments.CurrentMonthEmi,
                     CurrentMonthEmi = userPayments.CurrentMonthEmi + Convert.ToInt32(emiAmount),
                     PaymentDate = DateTime.Now,
                     PaymentMonth = userPayments.PaymentMonth
