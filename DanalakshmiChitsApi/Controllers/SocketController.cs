@@ -27,9 +27,8 @@ namespace DanalakshmiChitsApi.Controllers
                 var isNewConnection = string.IsNullOrEmpty(connectionId);
                 //var userDetailsObject = JsonSerializer.Deserialize<UserDetails>(userDetails);
                 //Console.WriteLine("User Details: " + userDetailsObject.Username);
-                if (isNewConnection)
-                {
-                    connectionId = _connectionManager.AddSocket(webSocket);
+              
+                    connectionId = _connectionManager.AddSocket(webSocket, connectionId);
 
                     // Store the connection ID in local storage
                     // Note: You may need to modify this based on your React app's storage mechanism
@@ -37,7 +36,7 @@ namespace DanalakshmiChitsApi.Controllers
                     // Here, we're using browser's localStorage for simplicity
                     //localStorage.setItem('connectionId', connectionId);
                    
-                }
+                
                 _connectionManager.AddConnectedClient(connectionId, userDetails);
                 var response = new { Action = "connectResponse", connectionId = connectionId };
                 await webSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)),
@@ -47,16 +46,18 @@ namespace DanalakshmiChitsApi.Controllers
                 var connectedClients = _connectionManager.GetConnectedClients();
                 //await SendToClient(webSocket, "connectedClients", connectedClients);
 
-                if (isNewConnection)
-                {
+               // if (isNewConnection)
+              //  {
                     // Add the new client to the list of connected clients
                     //_connectionManager.AddConnectedClient(connectionId);
                    // var connectedClients = _connectionManager.GetConnectedClients();
                     // Broadcast the updated list of connected clients to all clients
                     await BroadcastToAll("connectedClients", connectedClients);
-                }
+                var biddingDetails = _connectionManager.GetBiddings();
+                await BroadcastToAll("biddingResponse", biddingDetails);
+                //}
                 //var connectedClients = _connectionManager.GetConnectedClients();
-                await SendToClient(webSocket, "connectedClients", connectedClients);
+                // await SendToClient(webSocket, "connectedClients", connectedClients);
 
                 await HandleWebSocketConnection(webSocket, connectionId);
             }
@@ -114,6 +115,10 @@ namespace DanalakshmiChitsApi.Controllers
             // Clean up the connection
             _connectionManager.RemoveSocket(connectionId);
             _connectionManager.RemoveConnectedClient(connectionId);
+
+            // Broadcast the updated list of connected clients to all clients
+            var connectedClients = _connectionManager.GetConnectedClients();
+            await BroadcastToAll("connectedClients", connectedClients);
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         }
 
@@ -145,9 +150,12 @@ namespace DanalakshmiChitsApi.Controllers
         private ConcurrentDictionary<string, ClientInfo> _connectedClients = new ConcurrentDictionary<string, ClientInfo>();
         private ConcurrentDictionary<string, BiddingDetails> _bidding = new ConcurrentDictionary<string, BiddingDetails>();
 
-        public string AddSocket(WebSocket socket)
+        public string AddSocket(WebSocket socket,string connectionId)
         {
-            string connectionId = Guid.NewGuid().ToString();
+            if (string.IsNullOrEmpty(connectionId))
+            {
+              connectionId = Guid.NewGuid().ToString();
+            }
             _sockets.TryAdd(connectionId, socket);
             SaveDataToStorage();
             return connectionId;
@@ -155,8 +163,8 @@ namespace DanalakshmiChitsApi.Controllers
 
         public void RemoveSocket(string connectionId)
         {
-            SaveDataToStorage();
             _sockets.TryRemove(connectionId, out _);
+            SaveDataToStorage();
         }
 
         public IEnumerable<WebSocket> GetAllSockets()
@@ -233,11 +241,11 @@ namespace DanalakshmiChitsApi.Controllers
                 _connectedClients = JsonSerializer.Deserialize<ConcurrentDictionary<string, ClientInfo>>(connectedClients);
             }
 
-            if (File.Exists("sockets.json"))
-            {
-                var sockets = File.ReadAllText("sockets.json");
-                _sockets = JsonSerializer.Deserialize<ConcurrentDictionary<string, WebSocket>>(sockets);
-            }
+            //if (File.Exists("sockets.json"))
+            //{
+            //    var sockets = File.ReadAllText("sockets.json");
+            //    _sockets = JsonSerializer.Deserialize<ConcurrentDictionary<string, WebSocket>>(sockets);
+            //}
 
             if (File.Exists("bidding.json"))
             {
