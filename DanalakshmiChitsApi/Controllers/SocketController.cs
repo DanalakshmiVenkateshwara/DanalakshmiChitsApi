@@ -181,7 +181,7 @@ namespace DanalakshmiChitsApi.Controllers
             var user = JsonSerializer.Deserialize<UserDetails>(userDetails);
             //Console.WriteLine("User Details: " + userDetailsObject.Username);
        
-            var clientInfo = new ClientInfo { ConnectionId = connectionId, User = new UserDetails { Username= user.Username, Email=user.Email } };
+            var clientInfo = new ClientInfo { ConnectionId = connectionId, User = new UserDetails { Username= user.Username, Email=user.Email }, CreatedDate = DateTime.UtcNow };
 
             _connectedClients.TryAdd(connectionId, clientInfo);
             SaveDataToStorage();
@@ -206,7 +206,7 @@ namespace DanalakshmiChitsApi.Controllers
 
         public void AddBidding(string connectionId)
         {
-            var bids = new BiddingDetails { name = "test", amount = "67676", ConnectionId = connectionId };
+            var bids = new BiddingDetails { name = "test", amount = "67676", ConnectionId = connectionId,CreatedDate = DateTime.UtcNow };
             _bidding.TryAdd(Guid.NewGuid().ToString(), bids);
             SaveDataToStorage();
         }
@@ -272,6 +272,7 @@ namespace DanalakshmiChitsApi.Controllers
     {
         public string ConnectionId { get; set; }
         public UserDetails User { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 
     public class WebSocketMessage
@@ -289,5 +290,6 @@ namespace DanalakshmiChitsApi.Controllers
         public string name { get; set; }
         public string ConnectionId { get; set; }
         public string amount { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }
