@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DanalakshmiChitsApi.Controllers
 {
@@ -15,10 +16,11 @@ namespace DanalakshmiChitsApi.Controllers
     public class WebSocketController : ControllerBase
     {
         private static WebSocketConnectionManager _connectionManager = new WebSocketConnectionManager();
-
+        
         [HttpGet]
         public async Task<IActionResult> Connect(string connectionId, string userDetails)
         {
+            _connectionManager.LoadDataFromStorage();
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
@@ -89,14 +91,18 @@ namespace DanalakshmiChitsApi.Controllers
                         var response = new { Action = "connectResponse", connectionId = connectionId };
                         await webSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)),
                             WebSocketMessageType.Text, true, CancellationToken.None);
-                        var connectedClients = _connectionManager.GetConnectedClients();
+                        //var connectedClients = _connectionManager.GetConnectedClients();
                         //await SendToClient(webSocket, "connectedClients", connectedClients);
                         //// Continue handling other messages
                         //result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                         break;
-
+                    case "bidding":
+                        _connectionManager.AddBidding(connectionId);
+                        var biddingDetails = _connectionManager.GetBiddings();
+                        //biddingDetails.ConnectionId = connectionId;
+                        await BroadcastToAll("biddingResponse", biddingDetails);
+                        break;
                     // Add more cases to handle other actions
-
                     default:
                         // Invalid action, ignore the message
                         break;
@@ -137,16 +143,19 @@ namespace DanalakshmiChitsApi.Controllers
     {
         private ConcurrentDictionary<string, WebSocket> _sockets = new ConcurrentDictionary<string, WebSocket>();
         private ConcurrentDictionary<string, ClientInfo> _connectedClients = new ConcurrentDictionary<string, ClientInfo>();
+        private ConcurrentDictionary<string, BiddingDetails> _bidding = new ConcurrentDictionary<string, BiddingDetails>();
 
         public string AddSocket(WebSocket socket)
         {
             string connectionId = Guid.NewGuid().ToString();
             _sockets.TryAdd(connectionId, socket);
+            SaveDataToStorage();
             return connectionId;
         }
 
         public void RemoveSocket(string connectionId)
         {
+            SaveDataToStorage();
             _sockets.TryRemove(connectionId, out _);
         }
 
@@ -167,11 +176,13 @@ namespace DanalakshmiChitsApi.Controllers
             var clientInfo = new ClientInfo { ConnectionId = connectionId, User = new UserDetails { Username= user.Username, Email=user.Email } };
 
             _connectedClients.TryAdd(connectionId, clientInfo);
+            SaveDataToStorage();
         }
 
         public void RemoveConnectedClient(string connectionId)
         {
             _connectedClients.TryRemove(connectionId, out _);
+            SaveDataToStorage();
         }
 
         public System.Collections.Generic.IEnumerable<ClientInfo> GetConnectedClients()
@@ -184,6 +195,58 @@ namespace DanalakshmiChitsApi.Controllers
             _connectedClients.TryGetValue(connectionId, out var clientInfo);
             return clientInfo;
         }
+
+        public void AddBidding(string connectionId)
+        {
+            var bids = new BiddingDetails { name = "test", amount = "67676", ConnectionId = connectionId };
+            _bidding.TryAdd(Guid.NewGuid().ToString(), bids);
+            SaveDataToStorage();
+        }
+
+        public IEnumerable<BiddingDetails> GetBiddings()
+        {
+           return _bidding.Values;
+        }
+
+      
+
+
+
+        public void SaveDataToStorage()
+        {
+            var connectedClients = JsonSerializer.Serialize(_connectedClients);
+            File.WriteAllText("connectedClients.json", connectedClients);
+
+            var sockets = JsonSerializer.Serialize(_sockets);
+            File.WriteAllText("sockets.json", sockets);
+
+            var bidding = JsonSerializer.Serialize(_bidding);
+            File.WriteAllText("bidding.json", bidding);
+        }
+        
+
+        public void LoadDataFromStorage()
+        {
+            if (File.Exists("connectedClients.json"))
+            {
+                var connectedClients = File.ReadAllText("connectedClients.json");
+                _connectedClients = JsonSerializer.Deserialize<ConcurrentDictionary<string, ClientInfo>>(connectedClients);
+            }
+
+            if (File.Exists("sockets.json"))
+            {
+                var sockets = File.ReadAllText("sockets.json");
+                _sockets = JsonSerializer.Deserialize<ConcurrentDictionary<string, WebSocket>>(sockets);
+            }
+
+            if (File.Exists("bidding.json"))
+            {
+                var bidding = File.ReadAllText("bidding.json");
+                _bidding = JsonSerializer.Deserialize<ConcurrentDictionary<string, BiddingDetails>>(bidding);
+            }
+        }
+
+
 
         //private string RetrieveUserDetailsFromReactApp(string connectionId)
         //{
@@ -212,5 +275,11 @@ namespace DanalakshmiChitsApi.Controllers
     {
         public string Username { get; set; }
         public string Email { get; set; }
+    }
+        public class BiddingDetails
+    {
+        public string name { get; set; }
+        public string ConnectionId { get; set; }
+        public string amount { get; set; }
     }
 }
