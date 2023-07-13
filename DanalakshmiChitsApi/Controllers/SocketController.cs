@@ -97,8 +97,8 @@ namespace DanalakshmiChitsApi.Controllers
                         //// Continue handling other messages
                         //result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                         break;
-                    case "bidding":
-                        _connectionManager.AddBidding(connectionId);
+                    case "bidding": 
+                        _connectionManager.AddBidding(connectionId, JsonSerializer.Serialize(jsonMessage.Data));
                         var biddingDetails = _connectionManager.GetBiddings();
                         //biddingDetails.ConnectionId = connectionId;
                         await BroadcastToAll("biddingResponse", biddingDetails);
@@ -204,9 +204,10 @@ namespace DanalakshmiChitsApi.Controllers
             return clientInfo;
         }
 
-        public void AddBidding(string connectionId)
+        public void AddBidding(string connectionId, string Data )
         {
-            var bids = new BiddingDetails { name = "test", amount = "67676", ConnectionId = connectionId,CreatedDate = DateTime.UtcNow };
+            var bid = JsonSerializer.Deserialize<BiddingDetails>(Data);
+            var bids = new BiddingDetails { name = "test", amount = bid?.amount, ConnectionId = connectionId,CreatedDate = DateTime.UtcNow };
             _bidding.TryAdd(Guid.NewGuid().ToString(), bids);
             SaveDataToStorage();
         }
@@ -290,6 +291,6 @@ namespace DanalakshmiChitsApi.Controllers
         public string name { get; set; }
         public string ConnectionId { get; set; }
         public string amount { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 }
