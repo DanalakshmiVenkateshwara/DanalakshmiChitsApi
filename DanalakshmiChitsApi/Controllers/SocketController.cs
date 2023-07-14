@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace DanalakshmiChitsApi.Controllers
 {
@@ -15,19 +16,19 @@ namespace DanalakshmiChitsApi.Controllers
     public class WebSocketController : ControllerBase
     {
         private static WebSocketConnectionManager _connectionManager = new WebSocketConnectionManager();
-
+        
         [HttpGet]
         public async Task<IActionResult> Connect(string connectionId, string userDetails)
         {
+            _connectionManager.LoadDataFromStorage();
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
                 var isNewConnection = string.IsNullOrEmpty(connectionId);
                 //var userDetailsObject = JsonSerializer.Deserialize<UserDetails>(userDetails);
                 //Console.WriteLine("User Details: " + userDetailsObject.Username);
-                if (isNewConnection)
-                {
-                    connectionId = _connectionManager.AddSocket(webSocket);
+              
+                    connectionId = _connectionManager.AddSocket(webSocket, connectionId);
 
                     // Store the connection ID in local storage
                     // Note: You may need to modify this based on your React app's storage mechanism
@@ -35,7 +36,7 @@ namespace DanalakshmiChitsApi.Controllers
                     // Here, we're using browser's localStorage for simplicity
                     //localStorage.setItem('connectionId', connectionId);
                    
-                }
+                
                 _connectionManager.AddConnectedClient(connectionId, userDetails);
                 var response = new { Action = "connectResponse", connectionId = connectionId };
                 await webSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)),
@@ -45,16 +46,18 @@ namespace DanalakshmiChitsApi.Controllers
                 var connectedClients = _connectionManager.GetConnectedClients();
                 //await SendToClient(webSocket, "connectedClients", connectedClients);
 
-                if (isNewConnection)
-                {
+               // if (isNewConnection)
+              //  {
                     // Add the new client to the list of connected clients
                     //_connectionManager.AddConnectedClient(connectionId);
                    // var connectedClients = _connectionManager.GetConnectedClients();
                     // Broadcast the updated list of connected clients to all clients
                     await BroadcastToAll("connectedClients", connectedClients);
-                }
+                var biddingDetails = _connectionManager.GetBiddings();
+                await BroadcastToAll("biddingResponse", biddingDetails);
+                //}
                 //var connectedClients = _connectionManager.GetConnectedClients();
-                await SendToClient(webSocket, "connectedClients", connectedClients);
+                // await SendToClient(webSocket, "connectedClients", connectedClients);
 
                 await HandleWebSocketConnection(webSocket, connectionId);
             }
@@ -89,14 +92,18 @@ namespace DanalakshmiChitsApi.Controllers
                         var response = new { Action = "connectResponse", connectionId = connectionId };
                         await webSocket.SendAsync(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(response)),
                             WebSocketMessageType.Text, true, CancellationToken.None);
-                        var connectedClients = _connectionManager.GetConnectedClients();
+                        //var connectedClients = _connectionManager.GetConnectedClients();
                         //await SendToClient(webSocket, "connectedClients", connectedClients);
                         //// Continue handling other messages
                         //result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                         break;
-
+                    case "bidding": 
+                        _connectionManager.AddBidding(connectionId, JsonSerializer.Serialize(jsonMessage.Data));
+                        var biddingDetails = _connectionManager.GetBiddings();
+                        //biddingDetails.ConnectionId = connectionId;
+                        await BroadcastToAll("biddingResponse", biddingDetails);
+                        break;
                     // Add more cases to handle other actions
-
                     default:
                         // Invalid action, ignore the message
                         break;
@@ -108,6 +115,10 @@ namespace DanalakshmiChitsApi.Controllers
             // Clean up the connection
             _connectionManager.RemoveSocket(connectionId);
             _connectionManager.RemoveConnectedClient(connectionId);
+
+            // Broadcast the updated list of connected clients to all clients
+            var connectedClients = _connectionManager.GetConnectedClients();
+            await BroadcastToAll("connectedClients", connectedClients);
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
         }
 
@@ -137,17 +148,23 @@ namespace DanalakshmiChitsApi.Controllers
     {
         private ConcurrentDictionary<string, WebSocket> _sockets = new ConcurrentDictionary<string, WebSocket>();
         private ConcurrentDictionary<string, ClientInfo> _connectedClients = new ConcurrentDictionary<string, ClientInfo>();
+        private ConcurrentDictionary<string, BiddingDetails> _bidding = new ConcurrentDictionary<string, BiddingDetails>();
 
-        public string AddSocket(WebSocket socket)
+        public string AddSocket(WebSocket socket,string connectionId)
         {
-            string connectionId = Guid.NewGuid().ToString();
+            if (string.IsNullOrEmpty(connectionId))
+            {
+              connectionId = Guid.NewGuid().ToString();
+            }
             _sockets.TryAdd(connectionId, socket);
+            SaveDataToStorage();
             return connectionId;
         }
 
         public void RemoveSocket(string connectionId)
         {
             _sockets.TryRemove(connectionId, out _);
+            SaveDataToStorage();
         }
 
         public IEnumerable<WebSocket> GetAllSockets()
@@ -164,14 +181,16 @@ namespace DanalakshmiChitsApi.Controllers
             var user = JsonSerializer.Deserialize<UserDetails>(userDetails);
             //Console.WriteLine("User Details: " + userDetailsObject.Username);
        
-            var clientInfo = new ClientInfo { ConnectionId = connectionId, User = new UserDetails { Username= user.Username, Email=user.Email } };
+            var clientInfo = new ClientInfo { ConnectionId = connectionId, User = new UserDetails { Username= user.Username, Email=user.Email }, CreatedDate = DateTime.UtcNow };
 
             _connectedClients.TryAdd(connectionId, clientInfo);
+            SaveDataToStorage();
         }
 
         public void RemoveConnectedClient(string connectionId)
         {
             _connectedClients.TryRemove(connectionId, out _);
+            SaveDataToStorage();
         }
 
         public System.Collections.Generic.IEnumerable<ClientInfo> GetConnectedClients()
@@ -184,6 +203,59 @@ namespace DanalakshmiChitsApi.Controllers
             _connectedClients.TryGetValue(connectionId, out var clientInfo);
             return clientInfo;
         }
+
+        public void AddBidding(string connectionId, string Data )
+        {
+            var bid = JsonSerializer.Deserialize<BiddingDetails>(Data);
+            var bids = new BiddingDetails { name = "test", amount = bid?.amount, ConnectionId = connectionId,CreatedDate = DateTime.UtcNow };
+            _bidding.TryAdd(Guid.NewGuid().ToString(), bids);
+            SaveDataToStorage();
+        }
+
+        public IEnumerable<BiddingDetails> GetBiddings()
+        {
+           return _bidding.Values;
+        }
+
+      
+
+
+
+        public void SaveDataToStorage()
+        {
+            var connectedClients = JsonSerializer.Serialize(_connectedClients);
+            File.WriteAllText("connectedClients.json", connectedClients);
+
+            var sockets = JsonSerializer.Serialize(_sockets);
+            File.WriteAllText("sockets.json", sockets);
+
+            var bidding = JsonSerializer.Serialize(_bidding);
+            File.WriteAllText("bidding.json", bidding);
+        }
+        
+
+        public void LoadDataFromStorage()
+        {
+            if (File.Exists("connectedClients.json"))
+            {
+                var connectedClients = File.ReadAllText("connectedClients.json");
+                _connectedClients = JsonSerializer.Deserialize<ConcurrentDictionary<string, ClientInfo>>(connectedClients);
+            }
+
+            //if (File.Exists("sockets.json"))
+            //{
+            //    var sockets = File.ReadAllText("sockets.json");
+            //    _sockets = JsonSerializer.Deserialize<ConcurrentDictionary<string, WebSocket>>(sockets);
+            //}
+
+            if (File.Exists("bidding.json"))
+            {
+                var bidding = File.ReadAllText("bidding.json");
+                _bidding = JsonSerializer.Deserialize<ConcurrentDictionary<string, BiddingDetails>>(bidding);
+            }
+        }
+
+
 
         //private string RetrieveUserDetailsFromReactApp(string connectionId)
         //{
@@ -201,6 +273,7 @@ namespace DanalakshmiChitsApi.Controllers
     {
         public string ConnectionId { get; set; }
         public UserDetails User { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 
     public class WebSocketMessage
@@ -212,5 +285,12 @@ namespace DanalakshmiChitsApi.Controllers
     {
         public string Username { get; set; }
         public string Email { get; set; }
+    }
+        public class BiddingDetails
+    {
+        public string name { get; set; }
+        public string ConnectionId { get; set; }
+        public string amount { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 }
