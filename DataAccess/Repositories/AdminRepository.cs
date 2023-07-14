@@ -115,7 +115,7 @@ namespace DataAccess.Repositories
                 InstallmentAmount =chitPlans.InstallmentAmount,
                 NoOfMembers = chitPlans.NoOfMembers,
                 Existed = false,
-                StartDate = DateTime.Now,
+                StartDate = chitPlans.StartDate,//DateTime.Now,
                 MembersInCircle = chitPlans.MembersInCircle
             });
             }
