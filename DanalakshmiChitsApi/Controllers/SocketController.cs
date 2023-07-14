@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.IO;
+using System.Reflection;
 
 namespace DanalakshmiChitsApi.Controllers
 {
@@ -20,8 +21,8 @@ namespace DanalakshmiChitsApi.Controllers
         [HttpGet]
         public async Task<IActionResult> Connect(string connectionId, string userDetails,DateTime socketCloseTime)
         {
-            _connectionManager.LoadDataFromStorage();
-            TriggerActionAtTime(socketCloseTime);
+            //_connectionManager.LoadDataFromStorage();
+            //TriggerActionAtTime(socketCloseTime);
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
@@ -159,36 +160,43 @@ namespace DanalakshmiChitsApi.Controllers
             {
                 System.IO.File.Delete("sockets.json");
             }
+
+
+            //dynamic obj = new { };
+
+            //System.IO.File.WriteAllText("connectedClients.json", obj);
+            //System.IO.File.WriteAllText("bidding.json", obj);
+            //System.IO.File.WriteAllText("bidding.json", obj);
             var auctionStatus = new { message = "Auction closed"};
             await BroadcastToAll("auctionResponse", auctionStatus);
         }
 
-        [HttpPost("trigger")]
-        public IActionResult TriggerActionAtTime(DateTime triggerTime)
-        {
-            // Calculate the time until the desired trigger time
-            TimeSpan timeUntilTrigger = triggerTime - DateTime.Now;
+        //[HttpPost("trigger")]
+        //public IActionResult TriggerActionAtTime(DateTime triggerTime)
+        //{
+        //    // Calculate the time until the desired trigger time
+        //    TimeSpan timeUntilTrigger = triggerTime - DateTime.Now;
 
-            // If the desired trigger time has already passed, return an error response
-            if (timeUntilTrigger.TotalMilliseconds < 0)
-            {
-                return BadRequest("The trigger time has already passed.");
-            }
+        //    // If the desired trigger time has already passed, return an error response
+        //    if (timeUntilTrigger.TotalMilliseconds < 0)
+        //    {
+        //        return BadRequest("The trigger time has already passed.");
+        //    }
 
-            // Create a timer with the time until the desired trigger time
-            System.Timers.Timer timer = new System.Timers.Timer(timeUntilTrigger.TotalMilliseconds);
-            timer.Elapsed += async (sender, e) =>
-            {
-                // Stop the timer after the action is triggered
-                timer.Stop();
+        //    // Create a timer with the time until the desired trigger time
+        //    System.Timers.Timer timer = new System.Timers.Timer(timeUntilTrigger.TotalMilliseconds);
+        //    timer.Elapsed += async (sender, e) =>
+        //    {
+        //        // Stop the timer after the action is triggered
+        //        timer.Stop();
 
-                // Perform the desired action
-                await TriggerAction();
-            };
-            timer.Start();
+        //        // Perform the desired action
+        //        await TriggerAction();
+        //    };
+        //    timer.Start();
 
-            return Ok("Action triggered at the specified time.");
-        }
+        //    return Ok("Action triggered at the specified time.");
+        //}
     }
 
     public class WebSocketConnectionManager
