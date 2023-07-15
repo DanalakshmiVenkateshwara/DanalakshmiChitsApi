@@ -16,8 +16,10 @@ namespace DanalakshmiChitsApi.Controllers
     {
         private IUserManager _userManager { get; set; }
         private IAdminManger _adminManger { get; set; }
+        private readonly WebSocketController _webSocketController;
         public UserController(IUserManager userManager, IAdminManger adminManger)
         {
+            _webSocketController = new WebSocketController();
             _userManager = userManager;
             _adminManger = adminManger;
         }
@@ -50,6 +52,12 @@ namespace DanalakshmiChitsApi.Controllers
         public async Task<int> GetUserId(long mobileNo)
         {
             return await _userManager.GetUserId(mobileNo);
+        }
+        [HttpPost("trigger-action")]
+        public async Task<IActionResult> TriggerActionToSocket()
+        {
+            await _webSocketController.TriggerAction();
+            return Ok();
         }
     }
 }
