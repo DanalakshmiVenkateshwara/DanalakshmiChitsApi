@@ -12,7 +12,7 @@ namespace DataAccess
         public const string Member_Registration = @"INSERT INTO MemberRegistration(Name,Phone,State)
                                                         VALUES(@Name,@Phone,@State)";
 
-        public const string GET_ADMIN_PROFILE = @"SELECT ADDRESS, LANDLINENO,MOBILENO FROM ADMINPROFILE";
+        public const string GET_ADMIN_PROFILE = @"SELECT ADDRESS, LANDLINENO,MOBILENO,EMAIL FROM ADMINPROFILE";
 
         public const string Add_APP_USER = @"Insert into ApplicationUsers (Name,PHONE,State,Date)values(@Name,@PHONE,@State,@Date)";
 
