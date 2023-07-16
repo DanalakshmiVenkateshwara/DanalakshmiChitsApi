@@ -26,7 +26,7 @@ namespace DanalakshmiChitsApi.Controllers
             if (HttpContext.WebSockets.IsWebSocketRequest)
             {
                 using WebSocket webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-                var isNewConnection = string.IsNullOrEmpty(connectionId);
+                var isNewConnection = (string.IsNullOrEmpty(connectionId) || connectionId == "undefined");
                 //var userDetailsObject = JsonSerializer.Deserialize<UserDetails>(userDetails);
                 //Console.WriteLine("User Details: " + userDetailsObject.Username);
               
@@ -189,7 +189,8 @@ namespace DanalakshmiChitsApi.Controllers
 
         public string AddSocket(WebSocket socket,string connectionId)
         {
-            if (string.IsNullOrEmpty(connectionId))
+            if ((string.IsNullOrEmpty(connectionId) || connectionId == "undefined"))
+                
             {
               connectionId = Guid.NewGuid().ToString();
             }
