@@ -148,27 +148,9 @@ namespace DanalakshmiChitsApi.Controllers
         [HttpPost("triggerAction")]
         public  async Task TriggerAction()
         {
-            if (System.IO.File.Exists("connectedClients.json"))
-            {
-                System.IO.File.Delete("connectedClients.json");
-            }
-            if (System.IO.File.Exists("bidding.json"))
-            {
-                System.IO.File.Delete("bidding.json");
-            }
-            if (System.IO.File.Exists("sockets.json"))
-            {
-                System.IO.File.Delete("sockets.json");
-            }
-
-
-            //dynamic obj = new { };
-
-            //System.IO.File.WriteAllText("connectedClients.json", obj);
-            //System.IO.File.WriteAllText("bidding.json", obj);
-            //System.IO.File.WriteAllText("bidding.json", obj);
             var auctionStatus = new { message = "Auction closed"};
             await BroadcastToAll("auctionResponse", auctionStatus);
+            _connectionManager.RemoveAll();
         }
 
         //[HttpPost("trigger")]
@@ -212,14 +194,12 @@ namespace DanalakshmiChitsApi.Controllers
               connectionId = Guid.NewGuid().ToString();
             }
             _sockets.TryAdd(connectionId, socket);
-            SaveDataToStorage();
             return connectionId;
         }
 
         public void RemoveSocket(string connectionId)
         {
             _sockets.TryRemove(connectionId, out _);
-            SaveDataToStorage();
         }
 
         public IEnumerable<WebSocket> GetAllSockets()
@@ -235,17 +215,15 @@ namespace DanalakshmiChitsApi.Controllers
 
             var user = JsonSerializer.Deserialize<UserDetails>(userDetails);
             //Console.WriteLine("User Details: " + userDetailsObject.Username);
-       
-            var clientInfo = new ClientInfo { ConnectionId = connectionId, User = new UserDetails { Username= user.Username, Email=user.Email }, CreatedDate = DateTime.UtcNow };
+
+             var clientInfo = new ClientInfo { ConnectionId = connectionId, User = new UserDetails { Username = user.Username, Email = user.Email }, CreatedDate = DateTime.UtcNow };
 
             _connectedClients.TryAdd(connectionId, clientInfo);
-            SaveDataToStorage();
         }
 
         public void RemoveConnectedClient(string connectionId)
         {
             _connectedClients.TryRemove(connectionId, out _);
-            SaveDataToStorage();
         }
 
         public System.Collections.Generic.IEnumerable<ClientInfo> GetConnectedClients()
@@ -262,9 +240,8 @@ namespace DanalakshmiChitsApi.Controllers
         public void AddBidding(string connectionId, string Data )
         {
             var bid = JsonSerializer.Deserialize<BiddingDetails>(Data);
-            var bids = new BiddingDetails { name = "test", amount = bid?.amount, ConnectionId = connectionId,CreatedDate = DateTime.UtcNow };
+            var bids = new BiddingDetails { name = bid?.name, amount = bid?.amount, ConnectionId = connectionId,CreatedDate = DateTime.UtcNow };
             _bidding.TryAdd(Guid.NewGuid().ToString(), bids);
-            SaveDataToStorage();
         }
 
         public IEnumerable<BiddingDetails> GetBiddings()
@@ -272,46 +249,12 @@ namespace DanalakshmiChitsApi.Controllers
            return _bidding.Values;
         }
 
-      
-
-
-
-        public void SaveDataToStorage()
+        public void RemoveAll()
         {
-            var connectedClients = JsonSerializer.Serialize(_connectedClients);
-            File.WriteAllText("connectedClients.json", connectedClients);
-
-            var sockets = JsonSerializer.Serialize(_sockets);
-            File.WriteAllText("sockets.json", sockets);
-
-            var bidding = JsonSerializer.Serialize(_bidding);
-            File.WriteAllText("bidding.json", bidding);
+            _sockets.Clear();
+            _connectedClients.Clear();
+            _bidding.Clear();
         }
-        
-
-        public void LoadDataFromStorage()
-        {
-            if (File.Exists("connectedClients.json"))
-            {
-                var connectedClients = File.ReadAllText("connectedClients.json");
-                _connectedClients = JsonSerializer.Deserialize<ConcurrentDictionary<string, ClientInfo>>(connectedClients);
-            }
-
-            //if (File.Exists("sockets.json"))
-            //{
-            //    var sockets = File.ReadAllText("sockets.json");
-            //    _sockets = JsonSerializer.Deserialize<ConcurrentDictionary<string, WebSocket>>(sockets);
-            //}
-
-            if (File.Exists("bidding.json"))
-            {
-                var bidding = File.ReadAllText("bidding.json");
-                _bidding = JsonSerializer.Deserialize<ConcurrentDictionary<string, BiddingDetails>>(bidding);
-            }
-        }
-
-
-
         //private string RetrieveUserDetailsFromReactApp(string connectionId)
         //{
         //    // Implement the logic to retrieve user details (e.g., username)
