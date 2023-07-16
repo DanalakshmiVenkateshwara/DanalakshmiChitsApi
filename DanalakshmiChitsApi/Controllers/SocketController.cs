@@ -255,16 +255,18 @@ namespace DanalakshmiChitsApi.Controllers
             _connectedClients.Clear();
             _bidding.Clear();
         }
-        //private string RetrieveUserDetailsFromReactApp(string connectionId)
-        //{
-        //    // Implement the logic to retrieve user details (e.g., username)
-        //    // from the React app using the connection ID
-        //    // This could involve making API calls or accessing a shared storage mechanism
 
-        //    // Return the user details associated with the connection ID
-        //    // If the user details are not available or retrieved, return a default value
-        //    return "Default User";
-        //}
+      
+
+
+
+       
+        
+
+       
+
+
+
     }
 
     public class ClientInfo
