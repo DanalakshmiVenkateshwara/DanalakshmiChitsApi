@@ -144,6 +144,12 @@ namespace DataAccess
         public const string ValidateUser = @"select Id,Name,Email,IsAdmin from UserRegistration where Phone = @userName and Password = @password";
         public const string ValidateGroup = @"select count(*) from ChitGroups where GroupName =@groupName ";
         public const string Get_User_Id_With_MobileNo = @"select id from UserRegistration where Phone = @mobileNo";
+        public const string Get_Create_Auction_Details = @"insert into createauction(groupId, Amount, BaseAmount, StartDate, StartTime, EndTime, AuctionMonth)
+                                                          Values(@groupId, @Amount, @BaseAmount, @StartDate, @StartTime, @EndTime, @AuctionMonth)";
+        public const string Get_Create_Auction_Details_By_Group = @"select c.*,cg.GroupNme from createauction c
+                                                                       inner join chitgroups cg on c.groupId = cg.id where groupId = @groupid";
+        public const string Add_Create_Auction_Details = @"select c.*, cg.GroupNme from createauction c
+                                                                       inner join chitgroups cg on c.groupId = cg.id";
     }
 }
 

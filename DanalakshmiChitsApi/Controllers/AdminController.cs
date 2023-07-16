@@ -133,5 +133,17 @@ namespace DanalakshmiChitsApi.Controllers
         {
             return await _adminManger.ValidateGroup(groupName);
         }
+        [HttpPost]
+        [Route("CreateAuction")]
+        public async Task<int> CreateAuction(AuctionCreation auctionCreation )
+        {
+            return await _adminManger.CreateAuction(auctionCreation);
+        }
+        [HttpGet]
+        [Route("GetCreateAuction")]
+        public async Task<List<AuctionCreation>> GetCreateAuction(int groupId)
+        {
+            return await _adminManger.GetCreateAuction(groupId);
+        }
     }
 }

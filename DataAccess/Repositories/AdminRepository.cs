@@ -258,6 +258,26 @@ namespace DataAccess.Repositories
         {
             return await this.Find<int>(SqlQueries.ValidateGroup, new { groupName = groupName});
         }
-        
+        public async Task<int> CreateAuction(AuctionCreation auctionCreation)
+        {
+            return await this.AddOrUpdateDynamic(SqlQueries.Add_Create_Auction_Details, new
+            {
+                auctionCreation.GroupId,
+                auctionCreation.Amount,
+                auctionCreation.BaseAmount,
+                auctionCreation.StartDate,
+                auctionCreation.StartTime,
+                auctionCreation.EndTime,
+                auctionCreation.AuctionMonth
+            });
+        }
+        public async Task<List<AuctionCreation>> GetCreateAuction(int groupId)
+        {
+            if(groupId>0)
+                return await this.All<AuctionCreation>(SqlQueries.Get_Create_Auction_Details_By_Group , new { groupId });
+            else
+                return await this.All<AuctionCreation>(SqlQueries.Get_Create_Auction_Details);
+        }
+
     }
 }

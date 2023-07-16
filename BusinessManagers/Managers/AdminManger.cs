@@ -4,6 +4,7 @@ using DataAccess.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -90,6 +91,14 @@ namespace BusinessManagers.Managers
         public async Task<int> ValidateGroup(string groupName)
         {
             return await _adminRepository.ValidateGroup(groupName);
+        }
+        public async Task<int> CreateAuction(AuctionCreation auctionCreation)
+        {
+            return await _adminRepository.CreateAuction(auctionCreation);
+        }
+        public async Task<List<AuctionCreation>> GetCreateAuction(int groupId)
+        {
+            return await _adminRepository.GetCreateAuction(groupId);
         }
     }
     
