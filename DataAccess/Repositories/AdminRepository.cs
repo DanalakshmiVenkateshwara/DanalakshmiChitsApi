@@ -278,6 +278,22 @@ namespace DataAccess.Repositories
             else
                 return await this.All<AuctionCreation>(SqlQueries.Get_Create_Auction_Details);
         }
+        public async Task<int> SaveAuctionDetails(SaveAuctionDetails saveAuctionDetails)
+        {
+            return await this.AddOrUpdateDynamic(SqlQueries.Save_Auction_Details, new
+            {
+               groupId = saveAuctionDetails.GroupId,
+               userId = saveAuctionDetails.UserId,
+               AuctionDate = saveAuctionDetails.AuctionDate,
+               NextAuctionDate = saveAuctionDetails.NextAuctionDate,
+               AuctionAmount = saveAuctionDetails.AuctionAmount,
+               AmountToBePaid = saveAuctionDetails.GroupValue- saveAuctionDetails.AuctionAmount,
+               NoOFMonthsCompleted = saveAuctionDetails.AuctionMonth,
+               Status = true,
+               Dividend = saveAuctionDetails.AuctionAmount,
+               inStallMentAmount = (saveAuctionDetails.AuctionAmount - ((saveAuctionDetails.GroupValue * 5)/100))/ saveAuctionDetails.NoOfMembers
+            });
+        }
 
     }
 }

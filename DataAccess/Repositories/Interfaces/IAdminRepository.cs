@@ -29,5 +29,6 @@ namespace DataAccess.Repositories.Interfaces
         Task<int> GetPendingPayments(int userId, int groupId);
         Task<List<AuctionCreation>> GetCreateAuction(int groupId);
         Task<int> CreateAuction(AuctionCreation auctionCreation);
+        Task<int> SaveAuctionDetails(SaveAuctionDetails saveAuctionDetails);
     }
 }

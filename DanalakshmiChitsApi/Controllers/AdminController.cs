@@ -145,5 +145,11 @@ namespace DanalakshmiChitsApi.Controllers
         {
             return await _adminManger.GetCreateAuction(groupId);
         }
+        [HttpPost]
+        [Route("SaveAuctionDetails")]
+        public async Task<int> SaveAuctionDetails(SaveAuctionDetails saveAuctionDetails)
+        {
+            return await _adminManger.SaveAuctionDetails(saveAuctionDetails);
+        }
     }
 }

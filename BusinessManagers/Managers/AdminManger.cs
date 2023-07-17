@@ -100,6 +100,10 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.GetCreateAuction(groupId);
         }
+        public async Task<int> SaveAuctionDetails(SaveAuctionDetails saveAuctionDetails)
+        {
+            return await _adminRepository.SaveAuctionDetails(saveAuctionDetails);
+        }
     }
     
 }
