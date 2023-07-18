@@ -46,6 +46,12 @@ namespace DataAccess.Repositories
                         if (userChitStatus > 0)
                             item.UserChitSatus = true;
                         else item.UserChitSatus = false;
+
+                        var nextAuctionDate = await this.FindBy<string>(SqlQueries.Get_NextAuctionDate, new { groupId = item.GroupId });
+                        if (nextAuctionDate == null)
+                            item.NextAuctionDate = item.StartDate.AddDays(30);
+                        else
+                            item.NextAuctionDate =  DateTime.Parse(nextAuctionDate);
                     }
                 }
                 return myMhits;
@@ -284,14 +290,14 @@ namespace DataAccess.Repositories
             {
                groupId = saveAuctionDetails.GroupId,
                userId = saveAuctionDetails.UserId,
-               AuctionDate = saveAuctionDetails.AuctionDate,
-               NextAuctionDate = saveAuctionDetails.NextAuctionDate,
+               AuctionDate = saveAuctionDetails.AuctionDate.ToString(),
+               NextAuctionDate = saveAuctionDetails.NextAuctionDate.ToString(),
                AuctionAmount = saveAuctionDetails.AuctionAmount,
                AmountToBePaid = saveAuctionDetails.GroupValue- saveAuctionDetails.AuctionAmount,
                NoOFMonthsCompleted = saveAuctionDetails.AuctionMonth,
                Status = true,
                Dividend = saveAuctionDetails.AuctionAmount,
-               inStallMentAmount = (saveAuctionDetails.AuctionAmount - ((saveAuctionDetails.GroupValue * 5)/100))/ saveAuctionDetails.NoOfMembers
+               inStallMentAmount = (saveAuctionDetails.AuctionAmount - ((saveAuctionDetails.GroupValue * 5)/100))/ saveAuctionDetails.NoOfMembers,
             });
         }
 
