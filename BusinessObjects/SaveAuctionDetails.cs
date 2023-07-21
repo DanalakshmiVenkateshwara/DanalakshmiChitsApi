@@ -8,6 +8,7 @@ namespace BusinessObjects
 {
     public class SaveAuctionDetails
     {
+        public int CurrentAuctionId { get; set; }
         public int UserId { get; set; }
         public int GroupId { get; set; }
         public int NoOfMembers { get; set; }

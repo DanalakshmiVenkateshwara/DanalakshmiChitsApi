@@ -33,7 +33,19 @@ namespace DataAccess.Repositories
             if(userId>0)
                 return await this.All<ChitPlans>(SqlQueries.Get_Upcoming_ChitPlans);
             else
-                return await this.All<ChitPlans>(SqlQueries.Get_All_ChitPlans_By_Group, new { groupClosed = groupClosed });
+            {
+                var chitPlans =  await this.All<ChitPlans>(SqlQueries.Get_All_ChitPlans_By_Group, new { groupClosed = groupClosed });
+                if(chitPlans.Count > 0)
+                {
+                    foreach(var chitPlan in chitPlans)
+                    {
+                       var currentMonth = await this.FindBy<int>(SqlQueries.Get_Current_Month, new { groupId = chitPlan.Id });
+                        chitPlan.CurrentMonth = currentMonth + 1;
+                    }
+                }
+                return chitPlans;
+            }
+                
             //else
             //return await this.All<ChitPlans>(SqlQueries.Get_All_ChitPlans);
         }

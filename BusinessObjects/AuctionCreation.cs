@@ -8,6 +8,7 @@ namespace BusinessObjects
 {
     public class AuctionCreation
     {
+        public int Id { get; set; }
         public int GroupId { get; set; }
         public string GroupName { get; set; }
         public int Amount { get; set; }

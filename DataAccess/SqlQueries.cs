@@ -102,7 +102,11 @@ namespace DataAccess
         public const string Get_All_ChitPlans = @"Select * from ChitGroups";
 
         public const string Get_All_ChitPlans_By_Group = @"Select * from ChitGroups where groupClosed = @groupClosed";
+
+        public const string Get_Current_Month = @"select top 1 NoofmonthsCompleted from groupwisedetails where groupid = @groupId  order by id desc";
+
         public const string Get_Upcoming_ChitPlans = @"select * from ChitGroups where existed = 0 and groupclosed =0 and isDelete =0";
+
         public const string Get_Chits_DropDown = @"select id, groupName from ChitGroups where existed = 1 and  groupclosed = 0 and  isDelete =0 ";
 
         public const string Add_ChitPlan = @"Insert into ChitGroups 
@@ -157,6 +161,8 @@ namespace DataAccess
 
         public const string Save_Auction_Details = @"insert into groupwiseDetails (groupId, userid, AuctionDate, NextAuctionDate, AuctionAmount, AmountToBePaid,NoOfMonthsCompleted,[Status],Dividend,InstallMentAmount)
                                                       values(@groupId, @userid, @AuctionDate, @NextAuctionDate, @AuctionAmount, @AmountToBePaid, @NoOFMonthsCompleted, @Status, @Dividend, @inStallMentAmount)";
+
+        public const string Update_Auction_Status = @"Update update createauction set  status = 0 where id = @CurrAuctionId";
     }
 }
 

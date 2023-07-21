@@ -286,6 +286,10 @@ namespace DataAccess.Repositories
         }
         public async Task<int> SaveAuctionDetails(SaveAuctionDetails saveAuctionDetails)
         {
+            if(saveAuctionDetails.CurrentAuctionId > 0)
+            {
+                var currentAuctionStatus = 
+            }
             return await this.AddOrUpdateDynamic(SqlQueries.Save_Auction_Details, new
             {
                groupId = saveAuctionDetails.GroupId,
