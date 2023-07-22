@@ -162,7 +162,7 @@ namespace DataAccess
         public const string Save_Auction_Details = @"insert into groupwiseDetails (groupId, userid, AuctionDate, NextAuctionDate, AuctionAmount, AmountToBePaid,NoOfMonthsCompleted,[Status],Dividend,InstallMentAmount)
                                                       values(@groupId, @userid, @AuctionDate, @NextAuctionDate, @AuctionAmount, @AmountToBePaid, @NoOFMonthsCompleted, @Status, @Dividend, @inStallMentAmount)";
 
-        public const string Update_Auction_Status = @"Update update createauction set  status = 0 where id = @CurrAuctionId";
+        public const string Update_Auction_Status = @"Update update createauction set  status = 1 where id = @CurrAuctionId";
     }
 }
 

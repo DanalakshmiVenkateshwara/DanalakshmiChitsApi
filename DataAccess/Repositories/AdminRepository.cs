@@ -288,7 +288,10 @@ namespace DataAccess.Repositories
         {
             if(saveAuctionDetails.CurrentAuctionId > 0)
             {
-                var currentAuctionStatus = 
+                var currentAuctionStatus = await this.AddOrUpdateDynamic(SqlQueries.Update_Auction_Status, new
+                {
+                    CurrAuctionId = saveAuctionDetails.CurrentAuctionId
+                });
             }
             return await this.AddOrUpdateDynamic(SqlQueries.Save_Auction_Details, new
             {
