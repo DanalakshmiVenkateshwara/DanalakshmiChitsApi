@@ -141,9 +141,9 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpGet]
         [Route("GetCreateAuction")]
-        public async Task<List<AuctionCreation>> GetCreateAuction(int groupId)
+        public async Task<List<AuctionCreation>> GetCreateAuction(int userId)
         {
-            return await _adminManger.GetCreateAuction(groupId);
+            return await _adminManger.GetCreateAuction(userId);
         }
         [HttpPost]
         [Route("SaveAuctionDetails")]

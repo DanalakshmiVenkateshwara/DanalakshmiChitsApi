@@ -10,6 +10,7 @@ namespace BusinessObjects
     {
         public int Id { get; set; }
         public int GroupId { get; set; }
+        public int NoOfMembers { get; set; }
         public string GroupName { get; set; }
         public int Amount { get; set; }
         public int BaseAmount { get; set; }

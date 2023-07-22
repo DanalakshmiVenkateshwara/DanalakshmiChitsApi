@@ -154,15 +154,15 @@ namespace DataAccess
         public const string Get_User_Id_With_MobileNo = @"select id from UserRegistration where Phone = @mobileNo";
         public const string Add_Create_Auction_Details  = @"insert into createauction(groupId, Amount, BaseAmount, StartDate, StartTime, EndTime, AuctionMonth)
                                                           Values(@groupId, @Amount, @BaseAmount, @StartDate, @StartTime, @EndTime, @AuctionMonth)";
-        public const string Get_Create_Auction_Details_By_Group = @"select c.*,cg.GroupName from createauction c
-                                                                       inner join chitgroups cg on c.groupId = cg.id where groupId = @groupid";
-        public const string Get_Create_Auction_Details = @"select c.*, cg.GroupName from createauction c
-                                                                       inner join chitgroups cg on c.groupId = cg.id";
+        public const string Get_Create_Auction_Details_By_User = @"select c.*,cg.GroupName, cg.NoOfMembers from createauction c
+                                                                  inner join chitgroups cg on c.groupId = cg.id where groupId in(select groupId from enrollments where userid=@userId) and status = 0";
+        public const string Get_Create_Auction_Details = @"select c.*, cg.GroupName, cg.NoOfMembers from createauction c
+                                                                       inner join chitgroups cg on c.groupId = cg.id and status = 0";
 
         public const string Save_Auction_Details = @"insert into groupwiseDetails (groupId, userid, AuctionDate, NextAuctionDate, AuctionAmount, AmountToBePaid,NoOfMonthsCompleted,[Status],Dividend,InstallMentAmount)
                                                       values(@groupId, @userid, @AuctionDate, @NextAuctionDate, @AuctionAmount, @AmountToBePaid, @NoOFMonthsCompleted, @Status, @Dividend, @inStallMentAmount)";
 
-        public const string Update_Auction_Status = @"Update update createauction set  status = 1 where id = @CurrAuctionId";
+        public const string Update_Auction_Status = @"Update createauction set  status = 1 where id = @CurrAuctionId";
     }
 }
 

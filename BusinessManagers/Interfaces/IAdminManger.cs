@@ -27,7 +27,7 @@ namespace BusinessManagers.Interfaces
         Task<UserProfile> ValidateUser(string userName, string password);
         Task<int> ValidateGroup(string groupName);
         Task<int> GetPendingPayments(int userId, int groupId);
-        Task<List<AuctionCreation>> GetCreateAuction(int groupId);
+        Task<List<AuctionCreation>> GetCreateAuction(int userId);
         Task<int> CreateAuction(AuctionCreation auctionCreation);
         Task<int> SaveAuctionDetails(SaveAuctionDetails saveAuctionDetails);
     }

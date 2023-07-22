@@ -277,10 +277,10 @@ namespace DataAccess.Repositories
                 auctionCreation.AuctionMonth
             });
         }
-        public async Task<List<AuctionCreation>> GetCreateAuction(int groupId)
+        public async Task<List<AuctionCreation>> GetCreateAuction(int userId)
         {
-            if(groupId>0)
-                return await this.All<AuctionCreation>(SqlQueries.Get_Create_Auction_Details_By_Group , new { groupId });
+            if(userId > 0)
+                return await this.All<AuctionCreation>(SqlQueries.Get_Create_Auction_Details_By_User , new { userId });
             else
                 return await this.All<AuctionCreation>(SqlQueries.Get_Create_Auction_Details);
         }
@@ -298,13 +298,13 @@ namespace DataAccess.Repositories
                groupId = saveAuctionDetails.GroupId,
                userId = saveAuctionDetails.UserId,
                AuctionDate = saveAuctionDetails.AuctionDate.ToString(),
-               NextAuctionDate = saveAuctionDetails.NextAuctionDate.ToString(),
+               NextAuctionDate = saveAuctionDetails.AuctionDate.ToString() + 30,
                AuctionAmount = saveAuctionDetails.AuctionAmount,
                AmountToBePaid = saveAuctionDetails.GroupValue- saveAuctionDetails.AuctionAmount,
                NoOFMonthsCompleted = saveAuctionDetails.AuctionMonth,
                Status = true,
                Dividend = saveAuctionDetails.AuctionAmount,
-               inStallMentAmount = (saveAuctionDetails.AuctionAmount - ((saveAuctionDetails.GroupValue * 5)/100))/ saveAuctionDetails.NoOfMembers,
+               inStallMentAmount = (saveAuctionDetails.AuctionAmount - ((saveAuctionDetails.GroupValue * 4)/100))/ saveAuctionDetails.NoOfMembers,
             });
         }
 

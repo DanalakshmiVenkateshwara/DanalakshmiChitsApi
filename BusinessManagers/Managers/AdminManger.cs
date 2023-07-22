@@ -96,9 +96,9 @@ namespace BusinessManagers.Managers
         {
             return await _adminRepository.CreateAuction(auctionCreation);
         }
-        public async Task<List<AuctionCreation>> GetCreateAuction(int groupId)
+        public async Task<List<AuctionCreation>> GetCreateAuction(int userId)
         {
-            return await _adminRepository.GetCreateAuction(groupId);
+            return await _adminRepository.GetCreateAuction(userId);
         }
         public async Task<int> SaveAuctionDetails(SaveAuctionDetails saveAuctionDetails)
         {
