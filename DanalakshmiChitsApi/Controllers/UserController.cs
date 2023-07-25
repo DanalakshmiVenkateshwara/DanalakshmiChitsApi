@@ -54,7 +54,7 @@ namespace DanalakshmiChitsApi.Controllers
         {
             return await _userManager.GetUserId(mobileNo);
         }
-        [HttpGet("GetMyChits")]
+        [HttpPost("GetMyChits")]
         [EnableCors]
         public async Task<List<EnrollMents>> GetMyChits(int userId)
         {
