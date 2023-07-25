@@ -54,11 +54,11 @@ namespace DanalakshmiChitsApi.Controllers
         {
             return await _userManager.GetUserId(mobileNo);
         }
-        [HttpPost("GetMyChits")]
+        [HttpPost("GetMyChitsData")]
         [EnableCors]
-        public async Task<List<EnrollMents>> GetMyChits(int userId)
+        public async Task<List<EnrollMents>> GetMyChitsData([FromQuery] int userId)
         {
-            return await _userManager.GetMyChits(userId);
+            return await _userManager.GetMyChitsData(userId);
         }
         [HttpPost("trigger-action")]
         public async Task<IActionResult> TriggerActionToSocket()

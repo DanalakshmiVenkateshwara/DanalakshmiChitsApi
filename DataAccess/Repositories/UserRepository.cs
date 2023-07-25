@@ -60,7 +60,7 @@ namespace DataAccess.Repositories
         {
             return await this.FindBy<int>(SqlQueries.Get_User_Id_With_MobileNo, new { mobileNo = mobileNo });
         }
-        public async Task<List<EnrollMents>> GetMyChits(int userId)
+        public async Task<List<EnrollMents>> GetMyChitsData(int userId)
         {
             if (userId > 0) //it is used for my chits in user
             {

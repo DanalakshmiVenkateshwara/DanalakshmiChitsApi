@@ -15,6 +15,6 @@ namespace BusinessManagers.Interfaces
         Task<List<AcDetails>> GetUserAcCopy(int userId, int groupId);
         Task<List<ChitPlans>> GetChitsDropDown();
         Task<int> GetUserId(long mobileNo);
-        Task<List<EnrollMents>> GetMyChits(int userId);
+        Task<List<EnrollMents>> GetMyChitsData(int userId);
     }
 }

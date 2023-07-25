@@ -43,9 +43,9 @@ namespace DataAccess.Repositories.Managers
         {
             return await _userRepository.GetUserId(mobileNo);
         }
-        public async Task<List<EnrollMents>> GetMyChits(int userId)
+        public async Task<List<EnrollMents>> GetMyChitsData(int userId)
         {
-            return await _userRepository.GetMyChits(userId);
+            return await _userRepository.GetMyChitsData(userId);
         }
     }
 }
