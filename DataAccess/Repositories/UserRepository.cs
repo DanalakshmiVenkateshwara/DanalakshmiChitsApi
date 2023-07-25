@@ -60,6 +60,34 @@ namespace DataAccess.Repositories
         {
             return await this.FindBy<int>(SqlQueries.Get_User_Id_With_MobileNo, new { mobileNo = mobileNo });
         }
+        public async Task<List<EnrollMents>> GetMyChits(int userId)
+        {
+            if (userId > 0) //it is used for my chits in user
+            {
+                List<EnrollMents> myMhits = new List<EnrollMents>();
+                myMhits = await this.All<EnrollMents>(SqlQueries.Get_EnrollMents_By_UserId, new { userId });
+                if (myMhits.Count > 0)
+                {
+                    foreach (var item in myMhits)
+                    {
+                        item.PaidUpto = await this.FindBy<string>(SqlQueries.Get_RunningMonth_By_GroupId, new { groupId = item.GroupId });
+
+                        var userChitStatus = await this.FindBy<int>(SqlQueries.Get_User_Chit_Status, new { groupId = item.GroupId, userId });
+                        if (userChitStatus > 0)
+                            item.UserChitSatus = true;
+                        else item.UserChitSatus = false;
+
+                        var nextAuctionDate = await this.FindBy<string>(SqlQueries.Get_NextAuctionDate, new { groupId = item.GroupId });
+                        if (nextAuctionDate == null)
+                            item.NextAuctionDate = item.StartDate.AddDays(30);
+                        else
+                            item.NextAuctionDate = DateTime.Parse(nextAuctionDate);
+                    }
+                }
+                return myMhits;
+            }
+            return new List<EnrollMents>();
+        }
 
     }
 }

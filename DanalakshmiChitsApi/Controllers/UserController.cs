@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DanalakshmiChitsApi.Controllers
@@ -52,6 +53,11 @@ namespace DanalakshmiChitsApi.Controllers
         public async Task<int> GetUserId(long mobileNo)
         {
             return await _userManager.GetUserId(mobileNo);
+        }
+        [HttpGet("GetMyChits")]
+        public async Task<List<EnrollMents>> GetMyChits(int userId)
+        {
+            return await _userManager.GetMyChits(userId);
         }
         [HttpPost("trigger-action")]
         public async Task<IActionResult> TriggerActionToSocket()
