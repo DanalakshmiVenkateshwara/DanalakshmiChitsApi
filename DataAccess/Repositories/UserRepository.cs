@@ -77,11 +77,11 @@ namespace DataAccess.Repositories
                             item.UserChitSatus = true;
                         else item.UserChitSatus = false;
 
-                        //var nextAuctionDate = await this.FindBy<string>(SqlQueries.Get_NextAuctionDate, new { groupId = item.GroupId });
+                        var nextAuctionDate = await this.FindBy<string>(SqlQueries.Get_NextAuctionDate, new { groupId = item.GroupId });
                         //if (nextAuctionDate == null)
                         //    item.NextAuctionDate = item.StartDate.AddDays(30);
                         //else
-                        //    item.NextAuctionDate = DateTime.Parse(nextAuctionDate);
+                           item.NextAuctionDate = nextAuctionDate == null? item.StartDate.AddDays(30) : DateTime.Parse(nextAuctionDate);
                     }
                 }
                 return myMhits;
