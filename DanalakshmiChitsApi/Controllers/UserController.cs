@@ -56,7 +56,7 @@ namespace DanalakshmiChitsApi.Controllers
         }
         [HttpPost("GetMyChitsData")]
         [EnableCors]
-        public async Task<List<EnrollMents>> GetMyChitsData([FromQuery] int userId)
+        public async Task<List<EnrollMents>> GetMyChitsData(int userId)
         {
             return await _userManager.GetMyChitsData(userId);
         }
