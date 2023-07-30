@@ -77,7 +77,7 @@ namespace DataAccess.Repositories
                             item.UserChitSatus = true;
                         else item.UserChitSatus = false;
 
-                        item.NextAuctionDate = await this.FindBy<DateTime>(SqlQueries.Get_NextAuctionDate, new { groupId = item.GroupId });
+                        //item.NextAuctionDate = await this.FindBy<DateTime>(SqlQueries.Get_NextAuctionDate, new { groupId = item.GroupId });
                         //if (nextAuctionDate == null)
                         //    item.NextAuctionDate = item.StartDate.AddDays(30);
                         //else
