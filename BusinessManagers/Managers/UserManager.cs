@@ -30,9 +30,9 @@ namespace DataAccess.Repositories.Managers
         {
             return await _userRepository.GetAllChitPlans(groupClosed, userId);
         }
-        public async Task<List<ChitPlans>> GetChitsDropDown()
+        public async Task<List<ChitPlans>> GetChitsDropDown(int userId)
         {
-            return await _userRepository.GetChitsDropDown();
+            return await _userRepository.GetChitsDropDown(userId);
         }
         
         public async Task<List<AcDetails>> GetUserAcCopy(int userId, int groupId)

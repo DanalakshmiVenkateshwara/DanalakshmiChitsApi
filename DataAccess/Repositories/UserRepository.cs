@@ -23,9 +23,15 @@ namespace DataAccess.Repositories
             return await this.Find<UserProfile>(SqlQueries.GET_USER_PROFILE, new { userId = userId });
           
         }
-        public async Task<List<ChitPlans>> GetChitsDropDown()
+        public async Task<List<ChitPlans>> GetChitsDropDown(int userId)
         {
-            return await this.All<ChitPlans>(SqlQueries.Get_Chits_DropDown);
+            if(userId >0)
+            {
+                return await this.All<ChitPlans>(SqlQueries.Get_Chits_DropDown_for_AcCopy, new { userId = userId })
+            }
+            else
+             return await this.All<ChitPlans>(SqlQueries.Get_Chits_DropDown);
+            
         }
         
         public async Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed, int userId)

@@ -107,6 +107,8 @@ namespace DataAccess
 
         public const string Get_Upcoming_ChitPlans = @"select * from ChitGroups where existed = 0 and groupclosed =0 and isDelete =0";
 
+        public const string Get_Chits_DropDown_for_AcCopy = @"select c.id, C.groupName from enrollments e inner join chitgroups c on e.GroupId = c.id where userid = @userId";
+
         public const string Get_Chits_DropDown = @"select id, groupName from ChitGroups where existed = 1 and  groupclosed = 0 and  isDelete =0 ";
 
         public const string Add_ChitPlan = @"Insert into ChitGroups 

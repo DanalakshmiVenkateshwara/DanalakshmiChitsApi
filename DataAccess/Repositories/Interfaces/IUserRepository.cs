@@ -13,7 +13,7 @@ namespace DataAccess.Repositories.Interfaces
         Task<UserProfile> GetUserProfile(int userId);
         Task<List<ChitPlans>> GetAllChitPlans(bool groupClosed, int userId);
         Task<List<AcDetails>> GetUserAcCopy(int userId, int groupId);
-        Task<List<ChitPlans>> GetChitsDropDown();
+        Task<List<ChitPlans>> GetChitsDropDown(int userId);
         Task<int> GetUserId(long mobileNo);
         Task<List<EnrollMents>> GetMyChitsData(int userId);
     }
