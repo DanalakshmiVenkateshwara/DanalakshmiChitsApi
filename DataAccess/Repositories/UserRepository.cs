@@ -27,7 +27,7 @@ namespace DataAccess.Repositories
         {
             if(userId >0)
             {
-                return await this.All<ChitPlans>(SqlQueries.Get_Chits_DropDown_for_AcCopy, new { userId = userId })
+                return await this.All<ChitPlans>(SqlQueries.Get_Chits_DropDown_for_AcCopy, new { userId = userId });
             }
             else
              return await this.All<ChitPlans>(SqlQueries.Get_Chits_DropDown);
