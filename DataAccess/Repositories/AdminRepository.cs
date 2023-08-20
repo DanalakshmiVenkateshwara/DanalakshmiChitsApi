@@ -20,8 +20,7 @@ namespace DataAccess.Repositories
         }
         public async Task<List<AppUsers>> GetAppUsers()
         {
-
-            return await this.All<AppUsers>(SqlQueries.GET_APP_USERS);
+            return await this.All<AppUsers>(SqlQueries.GET_APP_USER_Info);
         }
         public async Task<List<RegisteUsers>> GetUsers(int userId, bool IsActive)
         {

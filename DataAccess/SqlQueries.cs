@@ -21,7 +21,7 @@ namespace DataAccess
 
 
        
-        public const string GET_APP_USERS = @"SELECT Name, Phone,State, Date FROM ApplicationUsers";
+        public const string GET_APP_USER_Info = @"SELECT Name, Phone, City, State, Date FROM userregistration order by id desc";
 
         public const string RegisteUsers = @"Insert into UserRegistration
                                              (Name,Phone,EMail,Aadhar,Password,Address,City,State,Date)
@@ -107,7 +107,7 @@ namespace DataAccess
 
         public const string Get_Upcoming_ChitPlans = @"select * from ChitGroups where existed = 0 and groupclosed =0 and isDelete =0";
 
-        public const string Get_Chits_DropDown_for_AcCopy = @"select c.id, C.groupName from enrollments e inner join chitgroups c on e.GroupId = c.id where userid = @userId";
+        public const string Get_Chits_DropDown_for_AcCopy = @"select c.id, C.groupName, C.Amount from enrollments e inner join chitgroups c on e.GroupId = c.id where userid = @userId";
 
         public const string Get_Chits_DropDown = @"select id, groupName from ChitGroups where existed = 1 and  groupclosed = 0 and  isDelete =0 ";
 
